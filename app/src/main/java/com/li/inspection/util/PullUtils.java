@@ -4,8 +4,10 @@ import android.util.Xml;
 
 import com.li.inspection.entity.RequestDTO;
 
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.ByteArrayInputStream;
@@ -27,61 +29,6 @@ import java.io.UnsupportedEncodingException;
  * 版本:      [v1.0]<br/>
  */
 public class PullUtils {
-	
-	public static String buildXML(){
-		StringWriter str = new StringWriter();
-		XmlSerializer xmlSerializer=new KXmlSerializer();
-			try {
-				xmlSerializer.setOutput(str);
-				xmlSerializer.startDocument("UTF-8", true);
-				xmlSerializer.startTag(null, "soap:Envelope")
-					.attribute(null, "xmlns:soap", "http://schemas.xmlsoap.org/soap/envelope/")
-					.attribute(null, "xmlns:soapenc", "http://schemas.xmlsoap.org/soap/encoding/")
-					.attribute(null, "xmlns:tns", "http://bjhms.eicp.net:9080/IntelligentTraffic/services/TpiWebService")
-					.attribute(null, "xmlns:types", "http://bjhms.eicp.net:9080/IntelligentTraffic/services/TpiWebService/encodedTypes")
-					.attribute(null, "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
-					.attribute(null, "xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
-				
-				xmlSerializer.startTag(null, "soap:Body")
-					.attribute(null, "soap:encodingStyle", "http://schemas.xmlsoap.org/soap/encoding/");
-				
-				xmlSerializer.startTag(null, "q1:iTpiService")
-					.attribute(null, "xmlns:q1", "http://webservice.tpi.jroo.com");
-				
-				xmlSerializer.startTag(null, "xtlb").attribute(null, "xsi:type", "xsd:string");
-				xmlSerializer.text("01");
-				xmlSerializer.endTag(null, "xtlb");
-				
-				xmlSerializer.startTag(null, "jkxlh").attribute(null, "xsi:type", "xsd:string");
-				xmlSerializer.text("123456");
-				xmlSerializer.endTag(null, "jkxlh");
-				
-				xmlSerializer.startTag(null, "jkid").attribute(null, "xsi:type", "xsd:string");
-				xmlSerializer.text("02");
-				xmlSerializer.endTag(null, "jkid");
-				
-				xmlSerializer.startTag(null, "json").attribute(null, "xsi:type", "xsd:string");
-				xmlSerializer.text("{'phone':'13816388665','password':'123456'}");
-				xmlSerializer.endTag(null, "json");
-				
-				xmlSerializer.endTag(null, "q1:iTpiService");
-				xmlSerializer.endTag(null, "soap:Body");
-				xmlSerializer.endTag(null, "soap:Envelope");
-				xmlSerializer.endDocument();
-				xmlSerializer.flush();
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-				return null;
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-				return null;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
-			} 
-		return str.toString();
-	}
-	
 	/**
 	 * 生成请求的
 	 * @param dto
@@ -93,8 +40,9 @@ public class PullUtils {
 			return null;
 		}
 		StringWriter str = new StringWriter();
-		XmlSerializer xmlSerializer=new KXmlSerializer();
 			try {
+				XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+				XmlSerializer xmlSerializer = factory.newSerializer();
 				xmlSerializer.setOutput(str);
 				xmlSerializer.startDocument("UTF-8", true);
 				
@@ -129,7 +77,7 @@ public class PullUtils {
 	            
 	            xmlSerializer.startTag(null, "json");
 	            xmlSerializer.attribute("http://www.w3.org/2001/XMLSchema-instance", "type", "xsd:string");
-	            xmlSerializer.text(dto.getJson()!=null&&dto.getJson().size()>0?new Gson().toJson(dto.getJson()):"");
+	            xmlSerializer.text(String.valueOf(dto.getJson()!=null&&dto.getJson().size()>0?new JSONObject(dto.getJson()):""));
 	            xmlSerializer.endTag(null, "json");
 	            
 	            xmlSerializer.endTag("http://webservice.tpi.jroo.com", "iTpiService");
@@ -146,7 +94,9 @@ public class PullUtils {
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null;
-			} 
+			} catch (XmlPullParserException e) {
+				e.printStackTrace();
+			}
 		return str.toString();
 	}
 	
