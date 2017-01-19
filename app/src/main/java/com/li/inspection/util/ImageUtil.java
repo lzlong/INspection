@@ -6,6 +6,17 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Environment;
+
+import com.li.inspection.entity.InspectionData;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.UUID;
 
 /**
  * Created by long on 17-1-14.
@@ -178,5 +189,41 @@ public class ImageUtil {
     public static int dp2px(Context context, float dp) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
+    }
+
+    public static String save(Bitmap bitmap, int tag) {
+        String path = Environment.getExternalStorageDirectory().toString() + "/inspection/image/" + UUID.randomUUID() + ".jpg";
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        byte[] buffer = bos.toByteArray();
+        if (buffer != null) {
+            File file = new File(path);
+            if (file.exists()) {
+                file.delete();
+            }
+            OutputStream outputStream = null;
+            try {
+                outputStream = new FileOutputStream(file);
+                outputStream.write(buffer);
+                outputStream.close();
+                switch (tag){
+                    case 0:
+                        InspectionData.getInstance().setLeft_path(path);
+                        break;
+                    case 1:
+                        InspectionData.getInstance().setRight_path(path);
+                        break;
+                    case 2:
+                        InspectionData.getInstance().setVin_path(path);
+                        break;
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return path;
     }
 }

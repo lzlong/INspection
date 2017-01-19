@@ -1,29 +1,25 @@
 package com.li.inspection.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 
 import com.li.inspection.R;
 import com.li.inspection.constant.Constants;
+import com.li.inspection.util.ImageUtil;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by long on 17-1-14.
@@ -196,6 +192,7 @@ public class PhotoActivity_a extends BaseActivity implements SurfaceHolder.Callb
             //预览图片
             if(null != mBitmap){
                 bitmap = mBitmap;
+                ImageUtil.save(mBitmap, tag);
                 Intent intent = new Intent(PhotoActivity_a.this, PhotoActivity.class);
                 startActivity(intent);
                 finish();

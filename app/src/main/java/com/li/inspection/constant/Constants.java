@@ -16,5 +16,8 @@ public class Constants {
     public static String VEHICLE_TYPE[] = {"K33 小型轿车", "K16 大型轿车","K32 小型越野客车"};
     public static String VEHICLE_COLOR[] = {"白色", "黑色","红色", "黄色", "绿色"};
     public static String VEHICLE_PN[] = {"1", "2","3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"};
+    public final static String WEBSERVCIE_PATH = "http://sdk.kmdns.net:4008/IntelligentTraffic/services/TpiWebService";
+    public final static String UPLOADSERVER = "bjhms.eicp.net";
+    public final static int UPLOADSERVERPORT = 8821;
 
 }

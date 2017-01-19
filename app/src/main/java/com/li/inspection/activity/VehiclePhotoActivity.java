@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import com.li.inspection.R;
 import com.li.inspection.application.SysApplication;
 import com.li.inspection.util.Utils;
+import com.li.inspection.util.WPopupWindow;
 
 /**
  * Created by long on 17-1-10.
@@ -87,12 +90,19 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
             jump(AutographActivity.class);
         } else if (v == submit_btn){
             setTag(-1);
-            Intent intent = new Intent(VehiclePhotoActivity.this, MainActivity.class);
-            startActivity(intent);
-            SysApplication.getInstance().exit();
+            submitData();
+//            Intent intent = new Intent(VehiclePhotoActivity.this, MainActivity.class);
+//            startActivity(intent);
+//            SysApplication.getInstance().exit();
         } else if (v == back_none){
             finish();
         }
+    }
+
+    private void submitData() {
+        View wh= LayoutInflater.from(this).inflate(R.layout.submitpop,null);
+        WPopupWindow popupWindow=new WPopupWindow(wh);
+        popupWindow.showAtLocation(Utils.getContentView(VehiclePhotoActivity.this), Gravity.CENTER, 0, 0);
     }
 
     public void setTag(int tag){

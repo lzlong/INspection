@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.li.inspection.R;
 import com.li.inspection.application.SysApplication;
 import com.li.inspection.constant.Constants;
+import com.li.inspection.entity.User;
 import com.li.inspection.util.Utils;
 import com.li.inspection.util.WPopupWindow;
 import com.li.inspection.util.WheelView;
@@ -36,6 +37,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private void initView() {
         user_img = (ImageView) findViewById(R.id.user_img);
         user_name = (TextView) findViewById(R.id.user_name);
+        if (Utils.isBlank(User.getInstance().getName())){
+            Utils.getUserData(getSharedPreferences("userData", 0));
+        }
+        user_name.setText(User.getInstance().getName());
         vehicle_input_imga = (ImageView) findViewById(R.id.vehicle_input_imga);
         vehicle_input_imgb = (ImageView) findViewById(R.id.vehicle_input_imgb);
         vehicle_input_imgc = (ImageView) findViewById(R.id.vehicle_input_imgc);

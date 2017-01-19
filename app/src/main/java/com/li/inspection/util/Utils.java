@@ -2,6 +2,7 @@ package com.li.inspection.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,8 +13,18 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.li.inspection.constant.Constants;
+import com.li.inspection.entity.User;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -142,4 +153,57 @@ public class Utils {
         return inSampleSize;
     }
 
+    public static JSONObject parseResponse(HttpResponse response){
+        HttpEntity httpEntity;
+        InputStream stream = null;
+        StringBuffer sb = new StringBuffer();
+        JSONObject jsonObject = null;
+        try{
+            if (response.getStatusLine().getStatusCode() == 200) {
+                // 响应的实体，代表接受http的消息，服务器返回的消息都在Entity
+                httpEntity = response.getEntity();
+                // 通过httpEntity可以得到流
+                stream = httpEntity.getContent();
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(stream));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                String json = PullUtils.parseXMLToJSON(sb.toString());
+                if (isNotBlank(json)){
+                    jsonObject = new JSONObject(json);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    public static void parseUser(JSONObject jsonObject, SharedPreferences preferences) {
+        User user = User.getInstance();
+        SharedPreferences.Editor edit = preferences.edit();
+        user.setId(jsonObject.optString("id"));
+        user.setName(jsonObject.optString("name"));
+        user.setPhone(jsonObject.optString("phone"));
+        user.setPhotoUrl(jsonObject.optString("photoUrl"));
+        edit.putString("userId", user.getId());
+        edit.putString("userName", user.getName());
+        edit.putString("userPhone", user.getPhone());
+        edit.putString("userPhotoUrl", user.getPhotoUrl());
+        edit.commit();
+
+    }
+    public static void getUserData(SharedPreferences preferences) {
+        User user = User.getInstance();
+        SharedPreferences.Editor edit = preferences.edit();
+        user.setId(preferences.getString("userId", ""));
+        user.setName(preferences.getString("userName", ""));
+        user.setPhone(preferences.getString("userPhone", ""));
+        user.setPhotoUrl(preferences.getString("userPhotoUrl", ""));
+
+    }
 }

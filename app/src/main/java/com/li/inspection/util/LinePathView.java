@@ -12,6 +12,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.li.inspection.entity.InspectionData;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -211,6 +213,7 @@ public class LinePathView extends View {
             OutputStream outputStream = new FileOutputStream(file);
             outputStream.write(buffer);
             outputStream.close();
+            InspectionData.getInstance().setSign_path(path);
         }
     }
 

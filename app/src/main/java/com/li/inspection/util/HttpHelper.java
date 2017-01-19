@@ -144,7 +144,10 @@ public class HttpHelper {
         synchronized (mSyncObject) {
             try {
                 HttpPost httpPost = new HttpPost(url);
-//                httpPost.setHeader("token", AppApplication.deviceId);
+                httpPost.setHeader("Charset", "UTF-8");
+                httpPost.setHeader("Content-Type", "text/xml;charset=UTF-8");
+                httpPost.setHeader("Accept-Encoding", "gzip,deflate");
+                httpPost.setHeader("SOAPAction", "");
                 httpPost.setEntity(new StringEntity(content, "UTF-8"));
                 return mClient.execute(httpPost);
             } catch (Exception e) {
