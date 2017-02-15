@@ -15,18 +15,18 @@ import java.net.Socket;
 public class FileUpload {
 	private Socket	socket;
 	private String filePath;
-	private String alarmID;
+//	private String alarmID;
 	private MyFileListener listener;
 	
 	/**
 	 * 文件上传工具
 	 * @param filePath 文件路径
-	 * @param alarmID 警情ID
+//	 * @param alarmID 警情ID
 	 * @param myFileListener 监听接口
 	 */
-	public FileUpload(String filePath, String alarmID, MyFileListener myFileListener) {
+	public FileUpload(String filePath, MyFileListener myFileListener) {
 		this.filePath = filePath;
-		this.alarmID = alarmID;
+//		this.alarmID = alarmID;
 		this.listener = myFileListener;
 	}
 	
@@ -42,7 +42,8 @@ public class FileUpload {
 			ps.writeUTF(file.getName()); // 文件名
 			ps.flush();
 //			ps.writeUTF(this.alarmID); // 警情ID
-//			ps.flush();
+			ps.writeUTF("1234567890"); // 警情ID
+			ps.flush();
 			DataInputStream pi = new DataInputStream(this.socket.getInputStream());
 			String czbz = pi.readUTF();
 			System.out.println("标志长度" + czbz);

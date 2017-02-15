@@ -3,18 +3,34 @@ package com.li.inspection.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.li.inspection.R;
 import com.li.inspection.application.SysApplication;
+import com.li.inspection.constant.Constants;
+import com.li.inspection.entity.InspectionData;
+import com.li.inspection.entity.RequestDTO;
+import com.li.inspection.entity.User;
+import com.li.inspection.util.FileUpload;
+import com.li.inspection.util.HttpHelper;
+import com.li.inspection.util.PullUtils;
 import com.li.inspection.util.Utils;
 import com.li.inspection.util.WPopupWindow;
+
+import org.apache.http.HttpResponse;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by long on 17-1-10.
@@ -98,11 +114,128 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
             finish();
         }
     }
-
     private void submitData() {
-        View wh= LayoutInflater.from(this).inflate(R.layout.submitpop,null);
-        WPopupWindow popupWindow=new WPopupWindow(wh);
-        popupWindow.showAtLocation(Utils.getContentView(VehiclePhotoActivity.this), Gravity.CENTER, 0, 0);
+        InspectionData inspectionData = InspectionData.getInstance();
+        if (Utils.isBlank(inspectionData.getLeft_path())){
+            Utils.showToast(VehiclePhotoActivity.this, "还未拍摄左前45°照片");
+            return;
+        }
+        if (Utils.isBlank(inspectionData.getRight_path())){
+            Utils.showToast(VehiclePhotoActivity.this, "还未拍摄右前45°照片");
+            return;
+        }
+        if (Utils.isBlank(inspectionData.getVin_path())){
+            Utils.showToast(VehiclePhotoActivity.this, "还未拍摄VIN");
+            return;
+        }
+        if (Utils.isBlank(inspectionData.getSign_path())){
+            Utils.showToast(VehiclePhotoActivity.this, "还未签名");
+            return;
+        }
+        String name = inspectionData.getLeft_path().substring(inspectionData.getLeft_path().lastIndexOf("/") + 1, inspectionData.getLeft_path().length()) + "@"
+                + inspectionData.getRight_path().substring(inspectionData.getRight_path().lastIndexOf("/") + 1, inspectionData.getRight_path().length()) + "@"
+                + inspectionData.getVin_path().substring(inspectionData.getVin_path().lastIndexOf("/") + 1, inspectionData.getVin_path().length()) + "@"
+                + inspectionData.getSign_path().substring(inspectionData.getSign_path().lastIndexOf("/") + 1, inspectionData.getSign_path().length());
+        String type = "1@1@1@1";
+        String fileId = "1@2@3@4";
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        if (Utils.isBlank(User.getInstance().getId())) {
+            Utils.getUserData(VehiclePhotoActivity.this);
+        }
+        params.put("regId", User.getInstance().getId());//用户id
+        params.put("ownerId", "1234567890");//警情id
+        params.put("fileName",name);
+        params.put("fileType", type);
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("id", fileId);
+        params.put("photoInfo", param);
+        final RequestDTO dto = new RequestDTO();
+        dto.setXtlb("02");
+        dto.setJkxlh("456789");
+        dto.setJkid("08");
+        dto.setJson(params);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String data = PullUtils.buildXML(dto);
+                HttpHelper httpHelper = new HttpHelper();
+                httpHelper.connect();
+                HttpResponse response = httpHelper.doPost(Constants.HTTP_PATH + Constants.WEBSERVCIE_PATH, data);
+                JSONObject jsonObject = Utils.parseResponse(response);
+                handler.sendMessage(handler.obtainMessage(0, jsonObject));
+            }
+        }).start();
+    }
+    ProgressBar submit_pro;
+    TextView submit_num;
+    WPopupWindow popupWindow;
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0){
+                JSONObject jsonObject = (JSONObject) msg.obj;
+                if (jsonObject != null && jsonObject.optInt("0") == 0){
+                    View wh= LayoutInflater.from(VehiclePhotoActivity.this).inflate(R.layout.submitpop,null);
+                    submit_pro = (ProgressBar) wh.findViewById(R.id.submit_pro);
+                    submit_num = (TextView) wh.findViewById(R.id.submit_num);
+                    popupWindow=new WPopupWindow(wh, 500, 200);
+                    popupWindow.setOutTouchCancel(false);
+                    popupWindow.showAtLocation(Utils.getContentView(VehiclePhotoActivity.this), Gravity.CENTER, 0, 0);
+                    upLoad(InspectionData.getInstance().getLeft_path(), 1);
+                } else {
+                    Utils.showToast(VehiclePhotoActivity.this, "网络异常");
+                }
+            } else if (msg.what == 1){
+                int position = (int) msg.obj;
+                submit_pro.setProgress(position);
+                if (position == 100){
+                    submit_pro.setProgress(0);
+                    submit_num.setText("2/4");
+                    upLoad(InspectionData.getInstance().getRight_path(), 2);
+                }
+            } else if (msg.what == 2){
+                int position = (int) msg.obj;
+                submit_pro.setProgress(position);
+                if (position == 100){
+                    submit_pro.setProgress(0);
+                    submit_num.setText("3/4");
+                    upLoad(InspectionData.getInstance().getVin_path(), 3);
+                }
+            } else if (msg.what == 3){
+                int position = (int) msg.obj;
+                submit_pro.setProgress(position);
+                if (position == 100){
+                    submit_pro.setProgress(0);
+                    submit_num.setText("4/4");
+                    upLoad(InspectionData.getInstance().getSign_path(), 4);
+                }
+            } else if (msg.what == 4){
+                int position = (int) msg.obj;
+                submit_pro.setProgress(position);
+                if (position == 100){
+                    popupWindow.dismiss();
+                    Utils.showToast(VehiclePhotoActivity.this, "上传完成");
+                }
+            }
+        }
+    };
+
+    private void upLoad(final String path, final int what){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new FileUpload(path, new FileUpload.MyFileListener(){
+
+                    @Override
+                    public void transferred(int position) {
+                        handler.sendMessage(handler.obtainMessage(what, position));
+                    }
+                }).transStart();
+            }
+        }).start();
     }
 
     public void setTag(int tag){

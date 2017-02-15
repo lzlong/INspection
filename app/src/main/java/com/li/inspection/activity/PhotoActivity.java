@@ -65,6 +65,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener{
             }
             finish();
         } else if (v == btn_tv){
+            ImageUtil.save(bitmap, tag);
             finish();
         }
     }

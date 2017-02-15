@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,6 +14,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.li.inspection.constant.Constants;
+import com.li.inspection.util.Utils;
 
 import java.io.File;
 
@@ -26,6 +28,7 @@ public class MyApplication extends Application {
     private LocationManager locationManager;
     private static String path = "/inspection/image/cache/";
     private static String crash = "/inspection/crash/";
+    private static SharedPreferences preferences;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -44,14 +47,15 @@ public class MyApplication extends Application {
         }
         //gps定位
         if (isOpen(this)){
-//            openGPS(this);
             getGPSConfi();
         }
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//            }
-//        }).start();
+        preferences = getSharedPreferences("Data", 0);
+        if (Utils.isNotBlank(preferences.getString("httpurl", ""))){
+            Constants.HTTP_PATH = preferences.getString("httpurl", "");
+        }
+        if (Utils.isNotBlank(preferences.getString("uploadUrl", ""))){
+            Constants.UPLOADSERVER = preferences.getString("uploadUrl", "");
+        }
     }
 
     /**

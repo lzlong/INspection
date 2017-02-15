@@ -38,7 +38,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         user_img = (ImageView) findViewById(R.id.user_img);
         user_name = (TextView) findViewById(R.id.user_name);
         if (Utils.isBlank(User.getInstance().getName())){
-            Utils.getUserData(getSharedPreferences("userData", 0));
+            Utils.getUserData(MainActivity.this);
         }
         user_name.setText(User.getInstance().getName());
         vehicle_input_imga = (ImageView) findViewById(R.id.vehicle_input_imga);

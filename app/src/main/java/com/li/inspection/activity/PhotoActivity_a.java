@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 
 import com.li.inspection.R;
 import com.li.inspection.constant.Constants;
-import com.li.inspection.util.ImageUtil;
 
 import java.io.IOException;
 
@@ -192,7 +191,6 @@ public class PhotoActivity_a extends BaseActivity implements SurfaceHolder.Callb
             //预览图片
             if(null != mBitmap){
                 bitmap = mBitmap;
-                ImageUtil.save(mBitmap, tag);
                 Intent intent = new Intent(PhotoActivity_a.this, PhotoActivity.class);
                 startActivity(intent);
                 finish();

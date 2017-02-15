@@ -159,7 +159,8 @@ public class Utils {
         StringBuffer sb = new StringBuffer();
         JSONObject jsonObject = null;
         try{
-            if (response.getStatusLine().getStatusCode() == 200) {
+            if (response != null && response.getStatusLine() != null &&
+                    response.getStatusLine().getStatusCode() == 200) {
                 // 响应的实体，代表接受http的消息，服务器返回的消息都在Entity
                 httpEntity = response.getEntity();
                 // 通过httpEntity可以得到流
@@ -197,7 +198,8 @@ public class Utils {
         edit.commit();
 
     }
-    public static void getUserData(SharedPreferences preferences) {
+    public static void getUserData(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("userData", 0);
         User user = User.getInstance();
         SharedPreferences.Editor edit = preferences.edit();
         user.setId(preferences.getString("userId", ""));

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.li.inspection.R;
+import com.li.inspection.constant.Constants;
 import com.li.inspection.entity.RequestDTO;
 import com.li.inspection.util.HttpHelper;
 import com.li.inspection.util.PullUtils;
@@ -83,7 +84,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 String data = PullUtils.buildXML(dto);
                 HttpHelper httpHelper = new HttpHelper();
                 httpHelper.connect();
-                HttpResponse response = httpHelper.doPost("http://sdkj.kmdns.net:4008/IntelligentTraffic/services/TpiWebService?wsdl", data);
+                HttpResponse response = httpHelper.doPost(Constants.HTTP_PATH + Constants.WEBSERVCIE_PATH, data);
                 JSONObject jsonObject = Utils.parseResponse(response);
                 handler.sendMessage(handler.obtainMessage(0, jsonObject));
             }
@@ -95,7 +96,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             super.handleMessage(msg);
             if (msg.what == 0){
                 JSONObject jsonObject = (JSONObject) msg.obj;
-                if (jsonObject == null || jsonObject.optInt("code") != 0){
+                if (jsonObject == null){
+                    Utils.showToast(LoginActivity.this, "登录失败");
+                } else if (jsonObject.optInt("code") != 0){
                     Utils.showToast(LoginActivity.this, jsonObject.optString("desc"));
                 } else {
                     Utils.parseUser(jsonObject, preferences);
