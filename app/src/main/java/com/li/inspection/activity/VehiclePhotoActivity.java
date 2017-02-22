@@ -18,6 +18,7 @@ import com.li.inspection.R;
 import com.li.inspection.application.SysApplication;
 import com.li.inspection.constant.Constants;
 import com.li.inspection.entity.InspectionData;
+import com.li.inspection.entity.Parameter;
 import com.li.inspection.entity.RequestDTO;
 import com.li.inspection.entity.User;
 import com.li.inspection.util.FileUpload;
@@ -107,9 +108,6 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
         } else if (v == submit_btn){
             setTag(-1);
             submitData();
-//            Intent intent = new Intent(VehiclePhotoActivity.this, MainActivity.class);
-//            startActivity(intent);
-//            SysApplication.getInstance().exit();
         } else if (v == back_none){
             finish();
         }
@@ -132,28 +130,35 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
             Utils.showToast(VehiclePhotoActivity.this, "还未签名");
             return;
         }
-        String name = inspectionData.getLeft_path().substring(inspectionData.getLeft_path().lastIndexOf("/") + 1, inspectionData.getLeft_path().length()) + "@"
-                + inspectionData.getRight_path().substring(inspectionData.getRight_path().lastIndexOf("/") + 1, inspectionData.getRight_path().length()) + "@"
-                + inspectionData.getVin_path().substring(inspectionData.getVin_path().lastIndexOf("/") + 1, inspectionData.getVin_path().length()) + "@"
-                + inspectionData.getSign_path().substring(inspectionData.getSign_path().lastIndexOf("/") + 1, inspectionData.getSign_path().length());
-        String type = "1@1@1@1";
-        String fileId = "1@2@3@4";
-
+//
         Map<String, Object> params = new HashMap<String, Object>();
         if (Utils.isBlank(User.getInstance().getId())) {
             Utils.getUserData(VehiclePhotoActivity.this);
         }
-        params.put("regId", User.getInstance().getId());//用户id
-        params.put("ownerId", "1234567890");//警情id
-        params.put("fileName",name);
-        params.put("fileType", type);
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("id", fileId);
-        params.put("photoInfo", param);
+        params.put("regid", User.getInstance().getId());//用户id
+        params.put("cyy", User.getInstance().getName());
+        params.put("syxx", inspectionData.getUse_property());
+        params.put("hpzl", inspectionData.getPlate_type());
+        params.put("ywlx", inspectionData.getService_type());
+        params.put("cllx1", inspectionData.getVehicle_type());
+        params.put("csys1", ((Parameter)inspectionData.getJudeList().get(3)).getData());
+        params.put("hdzrs1", ((Parameter)inspectionData.getJudeList().get(4)).getData());
+        params.put("fdjh", inspectionData.getFaDongJiHao());//车架号
+        params.put("clsbdh1", inspectionData.getVIN());//VIN
+        for (int i=0; i< Constants.upData.length; i++){
+            Parameter parameter = (Parameter) inspectionData.getJudeList().get(i);
+            if (parameter.getIdqualified() == 0){
+                params.put(Constants.upData[i], "1");
+            } else if (parameter.getIdqualified() == 1){
+                params.put(Constants.upData[i], "2");
+            } //else {
+//                params.put(Constants.upData[i], "");
+//            }
+        }
         final RequestDTO dto = new RequestDTO();
         dto.setXtlb("02");
         dto.setJkxlh("456789");
-        dto.setJkid("08");
+        dto.setJkid("07");
         dto.setJson(params);
         new Thread(new Runnable() {
             @Override
@@ -163,7 +168,7 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                 httpHelper.connect();
                 HttpResponse response = httpHelper.doPost(Constants.HTTP_PATH + Constants.WEBSERVCIE_PATH, data);
                 JSONObject jsonObject = Utils.parseResponse(response);
-                handler.sendMessage(handler.obtainMessage(0, jsonObject));
+                handler.sendMessage(handler.obtainMessage(5, jsonObject));
             }
         }).start();
     }
@@ -218,7 +223,53 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                 if (position == 100){
                     popupWindow.dismiss();
                     Utils.showToast(VehiclePhotoActivity.this, "上传完成");
+                    Intent intent = new Intent(VehiclePhotoActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    SysApplication.getInstance().exit();
                 }
+            } else if (msg.what == 5){
+                JSONObject jsonObject = (JSONObject) msg.obj;
+                String id = "";
+                if (jsonObject != null && jsonObject.optInt("0") == 0){
+                    id = jsonObject.optString("id");
+                } else {
+                    Utils.showToast(VehiclePhotoActivity.this, "网络异常");
+                }
+                InspectionData inspectionData = InspectionData.getInstance();
+                String name = inspectionData.getLeft_path().substring(inspectionData.getLeft_path().lastIndexOf("/") + 1, inspectionData.getLeft_path().length()) + "@"
+                        + inspectionData.getRight_path().substring(inspectionData.getRight_path().lastIndexOf("/") + 1, inspectionData.getRight_path().length()) + "@"
+                        + inspectionData.getVin_path().substring(inspectionData.getVin_path().lastIndexOf("/") + 1, inspectionData.getVin_path().length()) + "@"
+                        + inspectionData.getSign_path().substring(inspectionData.getSign_path().lastIndexOf("/") + 1, inspectionData.getSign_path().length());
+                String type = "1@1@1@1";
+                String fileId = "1@2@3@4";
+
+                Map<String, Object> params = new HashMap<String, Object>();
+                if (Utils.isBlank(User.getInstance().getId())) {
+                    Utils.getUserData(VehiclePhotoActivity.this);
+                }
+                params.put("regId", User.getInstance().getId());//用户id
+                params.put("ownerId", id);//警情id
+                params.put("fileName",name);
+                params.put("fileType", type);
+                Map<String, Object> param = new HashMap<String, Object>();
+                param.put("id", fileId);
+                params.put("photoInfo", param);
+                final RequestDTO dto = new RequestDTO();
+                dto.setXtlb("02");
+                dto.setJkxlh("456789");
+                dto.setJkid("08");
+                dto.setJson(params);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String data = PullUtils.buildXML(dto);
+                        HttpHelper httpHelper = new HttpHelper();
+                        httpHelper.connect();
+                        HttpResponse response = httpHelper.doPost(Constants.HTTP_PATH + Constants.WEBSERVCIE_PATH, data);
+                        JSONObject jsonObject = Utils.parseResponse(response);
+                        handler.sendMessage(handler.obtainMessage(0, jsonObject));
+                    }
+                }).start();
             }
         }
     };

@@ -13,6 +13,7 @@ import com.li.inspection.R;
 import com.li.inspection.adapter.JudeAdapter;
 import com.li.inspection.application.SysApplication;
 import com.li.inspection.constant.Constants;
+import com.li.inspection.entity.InspectionData;
 import com.li.inspection.entity.Parameter;
 import com.li.inspection.util.Utils;
 
@@ -82,6 +83,7 @@ public class JudeActivity extends BaseActivity implements View.OnClickListener{
                 Utils.showToast(JudeActivity.this, "请选择车辆和载人数");
                 return;
             }
+            InspectionData.getInstance().setJudeList(list);
             Intent intent = new Intent(JudeActivity.this, VehiclePhotoActivity.class);
             startActivity(intent);
         } else if (v == back_none){

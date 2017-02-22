@@ -47,7 +47,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         cancel.setOnClickListener(this);
 
         preferences = getSharedPreferences("Data", 0);
-        setting_edit.setText(preferences.getString("httpurl", ""));
+        if (Utils.isNotBlank(preferences.getString("httpurl", ""))){
+            setting_edit.setText(preferences.getString("httpurl", ""));
+        }
 
     }
     private String httpUrl;
@@ -64,6 +66,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             if (!httpUrl.startsWith("http://")){
                 httpUrl += "http://";
             }
+            Utils.showToast(SettingActivity.this, "正在设置");
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -89,10 +92,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     editor.putString("httpurl", httpUrl);
                     editor.putString("uploadUrl", httpUrl.substring(7, httpUrl.length()));
                     editor.commit();
+                    Utils.showToast(SettingActivity.this, "设置成功");
                     finish();
                 } else {
                     Utils.showToast(SettingActivity.this, "地址错误，请重新填写");
-                    setting_edit.setText("");
+                    setting_edit.setText("http://");
                 }
             }
         }

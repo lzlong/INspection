@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.li.inspection.R;
 import com.li.inspection.application.SysApplication;
 import com.li.inspection.constant.Constants;
+import com.li.inspection.entity.InspectionData;
 import com.li.inspection.entity.User;
 import com.li.inspection.util.Utils;
 import com.li.inspection.util.WPopupWindow;
@@ -109,6 +110,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             Utils.showToast(MainActivity.this, "请填写发动机号");
             return;
         }
+        InspectionData inspectionData = InspectionData.getInstance();
+        inspectionData.setUse_property(use_property.substring(use_property.lastIndexOf(" ")+1, use_property.length()));
+        inspectionData.setPlate_type(plate_type.substring(plate_type.lastIndexOf(" ")+1, plate_type.length()));
+        inspectionData.setService_type(service_type.substring(service_type.lastIndexOf(" ")+1, service_type.length()));
+        inspectionData.setVehicle_type(vehicle_type.substring(vehicle_type.lastIndexOf(" ")+1, vehicle_type.length()));
+        inspectionData.setVIN(VIN);
+        inspectionData.setFaDongJiHao(engine);
         Intent intent = new Intent(MainActivity.this, JudeActivity.class);
         startActivity(intent);
     }

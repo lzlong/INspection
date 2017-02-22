@@ -69,6 +69,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     }
 
     private void login(String user, String pass) {
+        Utils.showToast(LoginActivity.this, "正在登录");
         Map<String, Object> json = new HashMap<String,Object>();
         json.put("phone", user);
         json.put("password",pass);
