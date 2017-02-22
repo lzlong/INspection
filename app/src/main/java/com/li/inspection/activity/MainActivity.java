@@ -2,22 +2,39 @@ package com.li.inspection.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.li.inspection.R;
 import com.li.inspection.application.SysApplication;
 import com.li.inspection.constant.Constants;
 import com.li.inspection.entity.InspectionData;
+import com.li.inspection.entity.RequestDTO;
 import com.li.inspection.entity.User;
+import com.li.inspection.util.AppUtils;
+import com.li.inspection.util.HttpHelper;
+import com.li.inspection.util.PullUtils;
+import com.li.inspection.util.SmartDownloadProgressListener;
+import com.li.inspection.util.SmartFileDownloader;
 import com.li.inspection.util.Utils;
 import com.li.inspection.util.WPopupWindow;
 import com.li.inspection.util.WheelView;
+
+import org.apache.http.HttpResponse;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener{
 
@@ -57,10 +74,125 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         checkApp();
     }
 
+    String dir = Environment.getExternalStorageDirectory().toString() +
+            File.separator +"inspection/down/apk" + File.separator;//文件保存目录
+    String mandatoryUpgrade;
+    String path = "";
+    int versionCode;
     private void checkApp() {
-
+        versionCode = AppUtils.getAppVersionCode(MainActivity.this);
+        Map<String, Object> json = new HashMap<String, Object>();
+        json.put("versionCode", versionCode); // 当前版本号
+        json.put("platForm", 1);// 平台类型：Android或IOS，1：Android，2：IOS
+        json.put("clientType", "2");// 客户端类别，1：警员客户端，2：驾驶人客户端
+        final RequestDTO dto = new RequestDTO();
+        dto.setXtlb("02");
+        dto.setJkxlh("456789");
+        dto.setJkid("32");
+        dto.setJson(json);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String data = PullUtils.buildXML(dto);
+                HttpHelper httpHelper = new HttpHelper();
+                httpHelper.connect();
+                HttpResponse response = httpHelper.doPost(Constants.HTTP_PATH + Constants.WEBSERVCIE_PATH, data);
+                JSONObject jsonObject = Utils.parseResponse(response);
+                handler.sendMessage(handler.obtainMessage(0, jsonObject));
+            }
+        }).start();
     }
 
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0){
+                JSONObject jsonObject = (JSONObject) msg.obj;
+                if (jsonObject != null && jsonObject.optInt("code") == 0){
+                    int code = jsonObject.optInt("versionCode");
+                    if (code > versionCode){
+                        path = jsonObject.optString("fileUrl");
+                        showDownload();
+                    }
+                }
+            } else if (msg.what == 1){
+                int size = msg.getData().getInt("size");
+                pro.setProgress(size);
+                float result = (float)pro.getProgress()/ (float)pro.getMax();
+                int p = (int)(result*100);
+                if(pro.getProgress()==pro.getMax()) {
+                    Utils.showToast(MainActivity.this, "下载成功, 正在准备安装");
+                    if (popupWindow.isShowing()) {
+                        popupWindow.dismiss();
+                    }
+                    AppUtils.installApp(MainActivity.this, dir + path.substring(path.lastIndexOf('/') + 1));
+                }
+            } else if (msg.what == -1){
+                wh.findViewById(R.id.down_l).setVisibility(View.VISIBLE);
+                Utils.showToast(MainActivity.this, msg.getData().getString("error"));
+            }
+        }
+    };
+    private ProgressBar pro;
+    WPopupWindow popupWindow;
+    View wh;
+    private void showDownload() {
+        wh = LayoutInflater.from(this).inflate(R.layout.downpop,null);
+        pro = (ProgressBar) wh.findViewById(R.id.down_pro);
+        popupWindow = new WPopupWindow(wh);
+        popupWindow.showAtLocation(Utils.getContentView(MainActivity.this), Gravity.BOTTOM, 0, 0);
+        wh.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                    File file = new File(dir);
+                    if (!file.exists()) {
+                        file.mkdirs();
+                    }
+                    ((TextView)wh.findViewById(R.id.down_t)).setText("正在下载");
+                    wh.findViewById(R.id.down_l).setVisibility(View.GONE);
+                    download(wh, pro, path, file);
+                }else{
+                    Utils.showToast(MainActivity.this, "SDCard不存在或者写保护");
+                }
+            }
+        });
+        wh.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                finish();
+            }
+        });
+    }
+
+    private void download(final View wh, final ProgressBar pro, final String path, final File dir) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    SmartFileDownloader loader = new SmartFileDownloader(MainActivity.this, path, dir, 3);
+                    int length = loader.getFileSize();//获取文件的长度
+                    pro.setMax(length);
+                    loader.download(new SmartDownloadProgressListener() {
+                        @Override
+                        public void onDownloadSize(int size) {//可以实时得到文件下载的长度
+                            Message msg = new Message();
+                            msg.what = 1;
+                            msg.getData().putInt("size", size);
+                            handler.sendMessage(msg);
+                        }
+                    });
+                } catch (Exception e) {
+                    Message msg = new Message();//信息提示
+                    msg.what = -1;
+                    msg.getData().putString("error", "下载失败, 点击确定重新下载");//如果下载错误，显示提示失败！
+                    handler.sendMessage(msg);
+                }
+            }
+        }).start();//开始
+    }
     private void click() {
         vehicle_input_imga.setOnClickListener(this);
         vehicle_input_imgb.setOnClickListener(this);

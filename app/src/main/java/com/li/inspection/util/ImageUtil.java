@@ -33,7 +33,7 @@ public class ImageUtil {
     public static Bitmap createWaterMaskLeftTop(
             Context context, Bitmap src, Bitmap watermark) {
         return createWaterMaskBitmap(src, watermark,
-                dp2px(context, 20), dp2px(context, 20));
+                dp2px(context, 20), dp2px(context, 10));
     }
 
     private static Bitmap createWaterMaskBitmap(Bitmap src, Bitmap watermark,
