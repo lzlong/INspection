@@ -54,6 +54,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         vehicle_input_tvf = (EditText) findViewById(R.id.vehicle_input_tvf);
         next_btn = (Button) findViewById(R.id.next_btn);
         click();
+        checkApp();
+    }
+
+    private void checkApp() {
+
     }
 
     private void click() {
@@ -75,11 +80,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         } else if (v == vehicle_input_imgd){
             showPop(vehicle_input_tvd, Constants.VEHICLE_TYPE);
         } else if (v == next_btn){
-            check();
+            checkData();
         }
     }
 
-    private void check() {
+    private void checkData() {
         String use_property = vehicle_input_tva.getText().toString();
         String plate_type = vehicle_input_tvb.getText().toString();
         String service_type = vehicle_input_tvc.getText().toString();

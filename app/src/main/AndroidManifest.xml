@@ -35,12 +35,20 @@
             android:theme="@style/AppTheme.Dialog"></activity>
         <activity android:name=".activity.AutographActivity"
             android:theme="@style/AppTheme.Dialog"></activity>
-        <activity android:name=".activity.LoginActivity"></activity>
-        <activity android:name=".activity.JudeActivity"></activity>
-        <activity android:name=".activity.VehiclePhotoActivity"></activity>
-        <activity android:name=".activity.PhotoActivity_a"></activity>
-        <activity android:name=".activity.PhotoActivity_b"></activity>
-        <activity android:name=".activity.PhotoActivity"></activity>
+        <activity android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.JudeActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.VehiclePhotoActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.PhotoActivity_a"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.PhotoActivity_b"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.PhotoActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.RegisterActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
