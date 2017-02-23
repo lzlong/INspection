@@ -42,10 +42,10 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener{
                 Bitmap bit = Utils.decodeSampledBitmapFromResource(getResources(),
                         R.mipmap.timg, 100, 100);
                 bitmap = ImageUtil.createWaterMaskLeftTop(PhotoActivity.this, bitmap, bit);
-                bitmap = ImageUtil.drawTextToTopCenter(PhotoActivity.this, bitmap, VIN, 30);
-                bitmap = ImageUtil.drawTextToBottomCenter(PhotoActivity.this, bitmap, "邯郸交警支队车管所", 30);
-                bitmap = ImageUtil.drawTextToRightBottom(PhotoActivity.this, bitmap, Utils.getTime(), 20);
-                bitmap = ImageUtil.drawGpsToRightBottom(PhotoActivity.this, bitmap, Constants.Gps, 20);
+                bitmap = ImageUtil.drawTextToTopCenter(PhotoActivity.this, bitmap, VIN, 25);
+                bitmap = ImageUtil.drawTextToBottomCenter(PhotoActivity.this, bitmap, "邯郸交警支队车管所", 25);
+                bitmap = ImageUtil.drawTextToRightBottom(PhotoActivity.this, bitmap, Utils.getTime(), 15);
+                bitmap = ImageUtil.drawGpsToRightBottom(PhotoActivity.this, bitmap, Constants.Gps, 15);
             }
             photo.setImageBitmap(bitmap);
         }

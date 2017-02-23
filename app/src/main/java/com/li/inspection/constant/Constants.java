@@ -22,8 +22,9 @@ public class Constants {
 //    public static String UPLOADSERVER = "192.168.2.150";
 //    public static String UPLOADSERVER = "192.168.2.226";
     public static String UPLOADSERVER = "sdkj.kmdns.net";
-    public final static int UPLOADSERVERPORT = 8821;
-    
+    public final static int UPLOADSERVERPORT = 4009;
+//    public final static int UPLOADSERVERPORT = 8821;
+
     public static final String[] upData = {"clsbdh", "fdjxx", "clpp", "csys", "hdzrs", "cllx", "hpwg", "ltwhqk", "aqdsjjgp", "wkzszj", "zbzl", "ltgg", "chbffzz", "fgbzbpt", "mhq", "xsjljk", "yjck", "wbbs", "bzdjjbq", "jyhgzm", "zt"};
 
 }

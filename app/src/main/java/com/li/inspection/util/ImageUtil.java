@@ -73,7 +73,7 @@ public class ImageUtil {
         Rect bounds = new Rect();
         paint.getTextBounds(text, 0, text.length(), bounds);
         return drawTextToBitmap(context, bitmap, text, paint, bounds,
-                (bitmap.getWidth()/2 - (text.length()/2*size)),
+                (bitmap.getWidth() - bounds.width()) / 2,
                 dp2px(context, 20) + bounds.height());
     }
 

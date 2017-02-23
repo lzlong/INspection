@@ -17,7 +17,7 @@
                 android:id="@+id/jude_item_t"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:layout_gravity="center_vertical"
                 android:text="车辆号牌"/>
             <RelativeLayout
@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@id/jude_item_j"
                     android:layout_centerVertical="true"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:hint="请输入车辆和载人数"
                     android:layout_marginRight="10dp"
                     android:padding="2dp"

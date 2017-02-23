@@ -1,10 +1,20 @@
 package com.li.inspection.activity;
 
+import android.Manifest;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +32,7 @@ import com.li.inspection.entity.RequestDTO;
 import com.li.inspection.entity.User;
 import com.li.inspection.util.AppUtils;
 import com.li.inspection.util.HttpHelper;
+import com.li.inspection.util.PermissionUtils;
 import com.li.inspection.util.PullUtils;
 import com.li.inspection.util.SmartDownloadProgressListener;
 import com.li.inspection.util.SmartFileDownloader;
@@ -36,7 +47,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener{
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +63,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private TextView vehicle_input_tva, vehicle_input_tvb, vehicle_input_tvc, vehicle_input_tvd;
     private EditText vehicle_input_tve, vehicle_input_tvf;
     private Button next_btn;
+
     private void initView() {
         user_img = (ImageView) findViewById(R.id.user_img);
         user_name = (TextView) findViewById(R.id.user_name);
-        if (Utils.isBlank(User.getInstance().getName())){
+        if (Utils.isBlank(User.getInstance().getName())) {
             Utils.getUserData(MainActivity.this);
         }
         user_name.setText(User.getInstance().getName());
@@ -71,9 +83,125 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         vehicle_input_tvf = (EditText) findViewById(R.id.vehicle_input_tvf);
         next_btn = (Button) findViewById(R.id.next_btn);
         click();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //gps定位
+        if (isOpen(this)) {
+            getGPSConfi();
+        } else {
+            openGPS(this);
+        }
         checkApp();
     }
 
+    private LocationManager locationManager;
+
+    /**
+     * 判断手机GPS是否开启
+     * @return
+     */
+    public boolean isOpen(Context context) {
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        //通过GPS卫星定位,定位级别到街
+        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        //通过WLAN或者移动网络确定位置
+//        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (gps) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 开启手机GPS
+     */
+    public void openGPS(Context context) {
+        Intent GPSIntent = new Intent();
+        GPSIntent.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvide");
+        GPSIntent.addCategory("android.intent.category.ALTERNATIVE");
+        GPSIntent.setData(Uri.parse("custom:3"));
+        try {
+            //使用PendingIntent发送广播告诉手机去开启GPS功能
+            PendingIntent.getBroadcast(context, 0, GPSIntent, 0).send();
+        } catch (PendingIntent.CanceledException e) {
+            e.printStackTrace();
+        }
+    }
+    private PermissionUtils.PermissionGrant mPermissionGrant = new PermissionUtils.PermissionGrant() {
+        @Override
+        public void onPermissionGranted(int requestCode) {
+            switch (requestCode) {
+                case PermissionUtils.CODE_ACCESS_FINE_LOCATION:
+                    getGPSConfi();
+                    break;
+                case PermissionUtils.CODE_ACCESS_COARSE_LOCATION:
+                    getGPSConfi();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+    /**
+     * GPS功能已经打开-->根据GPS去获取经纬度
+     */
+    public void getGPSConfi() {
+        Location location;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            PermissionUtils.requestPermission(this, PermissionUtils.CODE_ACCESS_COARSE_LOCATION, mPermissionGrant);
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+
+        if (location != null) {
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            Constants.Gps = latitude + "," + longitude;
+//            Log.d(Constants.TAG, "经纬度:" + latitude + "--" + longitude);
+        } else {
+//            getGPSConfi();
+            Log.d(Constants.TAG, "未获取到经纬度数据");
+        }
+    }
+
+    public LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            if (location != null) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                Constants.Gps = latitude + "," + longitude;
+//                Log.d(Constants.TAG, "经纬度:" + latitude + "--" + longitude);
+            } else {
+//                getGPSConfi();
+                Log.d(Constants.TAG, "未获取到经纬度数据");
+            }
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
     String dir = Environment.getExternalStorageDirectory().toString() +
             File.separator +"inspection/down/apk" + File.separator;//文件保存目录
     String mandatoryUpgrade;

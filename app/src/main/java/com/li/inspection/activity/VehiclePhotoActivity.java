@@ -23,6 +23,7 @@ import com.li.inspection.entity.RequestDTO;
 import com.li.inspection.entity.User;
 import com.li.inspection.util.FileUpload;
 import com.li.inspection.util.HttpHelper;
+import com.li.inspection.util.PermissionUtils;
 import com.li.inspection.util.PullUtils;
 import com.li.inspection.util.Utils;
 import com.li.inspection.util.WPopupWindow;
@@ -145,15 +146,20 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
         params.put("hdzrs1", ((Parameter)inspectionData.getJudeList().get(4)).getData());
         params.put("fdjh", inspectionData.getFaDongJiHao());//车架号
         params.put("clsbdh1", inspectionData.getVIN());//VIN
+        boolean zt = false;
         for (int i=0; i< Constants.upData.length; i++){
             Parameter parameter = (Parameter) inspectionData.getJudeList().get(i);
             if (parameter.getIdqualified() == 0){
                 params.put(Constants.upData[i], "1");
             } else if (parameter.getIdqualified() == 1){
+                zt = true;
                 params.put(Constants.upData[i], "2");
             } //else {
 //                params.put(Constants.upData[i], "");
 //            }
+        }
+        if (zt){
+            params.put(Constants.upData[Constants.upData.length-1], "2");
         }
         final RequestDTO dto = new RequestDTO();
         dto.setXtlb("02");
@@ -327,4 +333,22 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                 break;
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        PermissionUtils.requestPermission(this, PermissionUtils.CODE_CAMERA, mPermissionGrant);
+    }
+
+    private PermissionUtils.PermissionGrant mPermissionGrant = new PermissionUtils.PermissionGrant() {
+        @Override
+        public void onPermissionGranted(int requestCode) {
+            switch (requestCode) {
+                case PermissionUtils.CODE_CAMERA:
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 }
