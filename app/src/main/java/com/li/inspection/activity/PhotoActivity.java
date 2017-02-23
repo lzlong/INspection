@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.li.inspection.R;
-import com.li.inspection.constant.Constants;
 import com.li.inspection.util.ImageUtil;
 import com.li.inspection.util.Utils;
 
@@ -45,7 +45,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener{
                 bitmap = ImageUtil.drawTextToTopCenter(PhotoActivity.this, bitmap, VIN, 25);
                 bitmap = ImageUtil.drawTextToBottomCenter(PhotoActivity.this, bitmap, "邯郸交警支队车管所", 25);
                 bitmap = ImageUtil.drawTextToRightBottom(PhotoActivity.this, bitmap, Utils.getTime(), 15);
-                bitmap = ImageUtil.drawGpsToRightBottom(PhotoActivity.this, bitmap, Constants.Gps, 15);
+//                bitmap = ImageUtil.drawGpsToRightBottom(PhotoActivity.this, bitmap, Constants.Gps, 15);
             }
             photo.setImageBitmap(bitmap);
         }
@@ -68,5 +68,13 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener{
             ImageUtil.save(bitmap, tag);
             finish();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            ImageUtil.save(bitmap, tag);
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

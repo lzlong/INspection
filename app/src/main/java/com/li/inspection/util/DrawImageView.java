@@ -43,12 +43,12 @@ public class DrawImageView extends ImageView{
 	public void onDraw(Canvas canvas) {
 		// TODO Auto-generated method stub
 		super.onDraw(canvas);
-		canvas.drawRect(new Rect(250, 30, 470, 1000), paint);//绘制矩形
+		canvas.drawRect(new Rect(375, 30, 705, 1500), paint);//绘制矩形
         //绘制四周阴影区域
         canvas.drawRect(0, 0, width, 30, mAreaPaint);
-        canvas.drawRect(0, 1000, width, height, mAreaPaint);
-        canvas.drawRect(0, 30, 250, 1000, mAreaPaint);
-        canvas.drawRect(470, 30, width, 1000, mAreaPaint);
+        canvas.drawRect(0, 1500, width, height, mAreaPaint);
+        canvas.drawRect(0, 30, 375, 1500, mAreaPaint);
+        canvas.drawRect(705, 30, width, 1500, mAreaPaint);
     }
 	
 	

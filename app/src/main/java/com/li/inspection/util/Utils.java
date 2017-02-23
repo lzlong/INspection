@@ -27,6 +27,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by long on 17-1-10.
@@ -78,6 +80,12 @@ public class Utils {
 
     public static boolean isNotBlank(final CharSequence cs) {
         return !isBlank(cs);
+    }
+
+    public static boolean isMobileNO(String mobiles){
+        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9])|(17[0-8])|(147))\\d{8}$");
+        Matcher m = p.matcher(mobiles);
+        return m.matches();
     }
 
     public static String getTime(){

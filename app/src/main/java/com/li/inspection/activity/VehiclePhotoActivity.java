@@ -1,5 +1,6 @@
 package com.li.inspection.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -7,8 +8,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -65,7 +68,12 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
         vehicle_photo_imgd = (ImageView) findViewById(R.id.vehicle_photo_imgd);
         submit_btn = (Button) findViewById(R.id.submit_btn);
         click();
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        width = wm.getDefaultDisplay().getWidth();
+        height = wm.getDefaultDisplay().getHeight();
     }
+    int width;
+    int height;
 
     private void click() {
         back_none.setOnClickListener(this);
@@ -123,10 +131,10 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
             Utils.showToast(VehiclePhotoActivity.this, "还未拍摄右前45°照片");
             return;
         }
-        if (Utils.isBlank(inspectionData.getVin_path())){
-            Utils.showToast(VehiclePhotoActivity.this, "还未拍摄VIN");
-            return;
-        }
+//        if (Utils.isBlank(inspectionData.getVin_path())){
+//            Utils.showToast(VehiclePhotoActivity.this, "还未拍摄VIN");
+//            return;
+//        }
         if (Utils.isBlank(inspectionData.getSign_path())){
             Utils.showToast(VehiclePhotoActivity.this, "还未签名");
             return;
@@ -136,7 +144,7 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
         if (Utils.isBlank(User.getInstance().getId())) {
             Utils.getUserData(VehiclePhotoActivity.this);
         }
-        params.put("regid", User.getInstance().getId());//用户id
+        params.put("regId", User.getInstance().getId());//用户id
         params.put("cyy", User.getInstance().getName());
         params.put("syxx", inspectionData.getUse_property());
         params.put("hpzl", inspectionData.getPlate_type());
@@ -192,8 +200,10 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                     View wh= LayoutInflater.from(VehiclePhotoActivity.this).inflate(R.layout.submitpop,null);
                     submit_pro = (ProgressBar) wh.findViewById(R.id.submit_pro);
                     submit_num = (TextView) wh.findViewById(R.id.submit_num);
-                    popupWindow=new WPopupWindow(wh, 500, 200);
+                    popupWindow=new WPopupWindow(wh, width-(width/4), height/3);
                     popupWindow.setOutTouchCancel(false);
+                    wh.setFocusable(false); // 这个很重要
+                    wh.setFocusableInTouchMode(false);
                     popupWindow.showAtLocation(Utils.getContentView(VehiclePhotoActivity.this), Gravity.CENTER, 0, 0);
                     upLoad(InspectionData.getInstance().getLeft_path(), 1);
                 } else {
@@ -204,8 +214,8 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                 submit_pro.setProgress(position);
                 if (position == 100){
                     submit_pro.setProgress(0);
-                    submit_num.setText("2/4");
-                    upLoad(InspectionData.getInstance().getRight_path(), 2);
+                    submit_num.setText("2/3");
+                    upLoad(InspectionData.getInstance().getRight_path(), 3);
                 }
             } else if (msg.what == 2){
                 int position = (int) msg.obj;
@@ -220,7 +230,7 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                 submit_pro.setProgress(position);
                 if (position == 100){
                     submit_pro.setProgress(0);
-                    submit_num.setText("4/4");
+                    submit_num.setText("3/3");
                     upLoad(InspectionData.getInstance().getSign_path(), 4);
                 }
             } else if (msg.what == 4){
@@ -235,7 +245,6 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                 }
             } else if (msg.what == 5){
                 JSONObject jsonObject = (JSONObject) msg.obj;
-                String id = "";
                 if (jsonObject != null && jsonObject.optInt("0") == 0){
                     id = jsonObject.optString("id");
                 } else {
@@ -244,10 +253,12 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                 InspectionData inspectionData = InspectionData.getInstance();
                 String name = inspectionData.getLeft_path().substring(inspectionData.getLeft_path().lastIndexOf("/") + 1, inspectionData.getLeft_path().length()) + "@"
                         + inspectionData.getRight_path().substring(inspectionData.getRight_path().lastIndexOf("/") + 1, inspectionData.getRight_path().length()) + "@"
-                        + inspectionData.getVin_path().substring(inspectionData.getVin_path().lastIndexOf("/") + 1, inspectionData.getVin_path().length()) + "@"
+//                        + inspectionData.getVin_path().substring(inspectionData.getVin_path().lastIndexOf("/") + 1, inspectionData.getVin_path().length()) + "@"
                         + inspectionData.getSign_path().substring(inspectionData.getSign_path().lastIndexOf("/") + 1, inspectionData.getSign_path().length());
-                String type = "1@1@1@1";
-                String fileId = "1@2@3@4";
+                String type = "1@1@1";
+                String fileId = "1@2@3";
+//                String type = "1@1@1@1";
+//                String fileId = "1@2@3@4";
 
                 Map<String, Object> params = new HashMap<String, Object>();
                 if (Utils.isBlank(User.getInstance().getId())) {
@@ -279,12 +290,12 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
             }
         }
     };
-
+    String id = "";
     private void upLoad(final String path, final int what){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                new FileUpload(path, new FileUpload.MyFileListener(){
+                new FileUpload(id, path, new FileUpload.MyFileListener(){
 
                     @Override
                     public void transferred(int position) {
@@ -351,4 +362,14 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
             }
         }
     };
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            if (popupWindow.isShowing()){
+                return false;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

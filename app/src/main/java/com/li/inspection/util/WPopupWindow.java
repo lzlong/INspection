@@ -115,6 +115,8 @@ public class WPopupWindow extends PopupWindow {
             });
         }else{
             setBackgroundDrawable(null);
+            setFocusable(false);
+            setOutsideTouchable(false);
             setTouchInterceptor(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {

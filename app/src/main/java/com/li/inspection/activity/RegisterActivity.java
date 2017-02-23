@@ -34,7 +34,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.register);
         initView();
     }
-    private EditText register_user, register_pass, register_pass_two;
+    private EditText register_user, register_phone, register_pass, register_pass_two;
     private Button register_btn;
     private ImageView back_none;
     private TextView name_none;
@@ -44,6 +44,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         name_none = (TextView) findViewById(R.id.name_none);
         name_none.setText("注册");
         register_user = (EditText) findViewById(R.id.register_user);
+        register_phone = (EditText) findViewById(R.id.register_phone);
         register_pass = (EditText) findViewById(R.id.register_pass);
         register_pass_two = (EditText) findViewById(R.id.register_pass_two);
         register_btn = (Button) findViewById(R.id.register_btn);
@@ -61,10 +62,15 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private void register() {
         String user = register_user.getText().toString();
+        String phone = register_phone.getText().toString();
         String pass = register_pass.getText().toString();
         String pass_t = register_pass_two.getText().toString();
         if (Utils.isBlank(user)){
             Utils.showToast(RegisterActivity.this, "请输入用户名");
+            return;
+        }
+        if (Utils.isBlank(phone) || !Utils.isMobileNO(phone)){
+            Utils.showToast(RegisterActivity.this, "请输入正确的手机号");
             return;
         }
         if (Utils.isBlank(pass)){
@@ -80,7 +86,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
         Utils.showToast(RegisterActivity.this, "正在注册");
         Map<String, Object> json = new HashMap<String,Object>();
-        json.put("phone", user);
+        json.put("xm", user);
+        json.put("phone", phone);
         json.put("password",pass);
         json.put("userType", "2");
         final RequestDTO dto = new RequestDTO();

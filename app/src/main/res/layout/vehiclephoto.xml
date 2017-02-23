@@ -87,11 +87,13 @@
                         android:layout_marginRight="5dp"
                         android:visibility="invisible"/>
                 </RelativeLayout>
-                <include layout="@layout/line"/>
+                <include layout="@layout/line"
+                    android:visibility="gone"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp">
+                    android:padding="10dp"
+                    android:visibility="gone">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

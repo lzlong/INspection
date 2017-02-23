@@ -15,7 +15,7 @@ import java.net.Socket;
 public class FileUpload {
 	private Socket	socket;
 	private String filePath;
-//	private String alarmID;
+	private String alarmID;
 	private MyFileListener listener;
 	
 	/**
@@ -24,9 +24,9 @@ public class FileUpload {
 //	 * @param alarmID 警情ID
 	 * @param myFileListener 监听接口
 	 */
-	public FileUpload(String filePath, MyFileListener myFileListener) {
+	public FileUpload(String alarmID, String filePath, MyFileListener myFileListener) {
 		this.filePath = filePath;
-//		this.alarmID = alarmID;
+		this.alarmID = alarmID;
 		this.listener = myFileListener;
 	}
 	
@@ -41,8 +41,7 @@ public class FileUpload {
 			DataOutputStream ps = new DataOutputStream(this.socket.getOutputStream());
 			ps.writeUTF(file.getName()); // 文件名
 			ps.flush();
-//			ps.writeUTF(this.alarmID); // 警情ID
-			ps.writeUTF("1234567890"); // 警情ID
+			ps.writeUTF(this.alarmID); // 警情ID
 			ps.flush();
 			DataInputStream pi = new DataInputStream(this.socket.getInputStream());
 			String czbz = pi.readUTF();
@@ -109,6 +108,6 @@ public class FileUpload {
 	
 	
 	public interface MyFileListener{
-		public void transferred(int position);
+		void transferred(int position);
 	}
 }

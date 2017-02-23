@@ -9,6 +9,8 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,6 +22,7 @@ import android.widget.ImageButton;
 import com.li.inspection.R;
 import com.li.inspection.constant.Constants;
 import com.li.inspection.util.DrawImageView;
+import com.li.inspection.util.Utils;
 
 import java.io.IOException;
 
@@ -61,6 +64,10 @@ public class PhotoActivity_b extends BaseActivity implements SurfaceHolder.Callb
                 if (success) {//success表示对焦成功
                     Log.i(Constants.TAG, "myAutoFocusCallback: success...");
                     //myCamera.setOneShotPreviewCallback(null);
+                    if (!isAuto){
+                        isAuto = true;
+                        autoFocus.start();
+                    }
                 } else {
                     //未对焦成功
                     Log.i(Constants.TAG, "myAutoFocusCallback: 失败了...");
@@ -110,6 +117,7 @@ public class PhotoActivity_b extends BaseActivity implements SurfaceHolder.Callb
 
             myCamera.stopPreview();
             isPreview = false;
+            isAuto = false;
             myCamera.release();
             myCamera = null;
         }
@@ -117,6 +125,7 @@ public class PhotoActivity_b extends BaseActivity implements SurfaceHolder.Callb
     //初始化相机
     public void initCamera(){
         if(isPreview){
+            isAuto = false;
             myCamera.stopPreview();
         }
         if(null != myCamera){
@@ -148,7 +157,7 @@ public class PhotoActivity_b extends BaseActivity implements SurfaceHolder.Callb
             myParam.setPreviewSize(1280, 720);
             //myParam.set("rotation", 90);
             myCamera.setDisplayOrientation(90);
-            myParam.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+//            myParam.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
             myCamera.setParameters(myParam);
             myCamera.startPreview();
             myCamera.autoFocus(myAutoFocusCallback);
@@ -211,6 +220,7 @@ public class PhotoActivity_b extends BaseActivity implements SurfaceHolder.Callb
         public void onClick(View v) {
             // TODO Auto-generated method stub
             if(isPreview && myCamera!=null){
+                isAuto = false;
                 myCamera.takePicture(myShutterCallback, null, myJpegCallback);
             }
         }
@@ -250,6 +260,42 @@ public class PhotoActivity_b extends BaseActivity implements SurfaceHolder.Callb
         //无意中按返回键时要释放内存
         // TODO Auto-generated method stub
         super.onBackPressed();
+        isAuto = false;
         PhotoActivity_b.this.finish();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isAuto = false;
+    }
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            try {
+                myCamera.autoFocus(myAutoFocusCallback);
+            } catch (Exception e) {
+                Utils.logD("error:  myCamera.autoFocus(myAutoFocusCallback)");
+                e.printStackTrace();
+            }
+        }
+    };
+
+    boolean isAuto = false;
+
+    Thread autoFocus = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (isAuto){
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                handler.sendMessage(handler.obtainMessage());
+            }
+        }
+    });
 }
