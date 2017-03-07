@@ -26,6 +26,17 @@
                 android:layout_alignParentStart="true"
                 android:id="@+id/cancel"
                 android:text="取消" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textSize="17sp"
+                android:textColor="@color/jude_t"
+                android:layout_toRightOf="@id/cancel"
+                android:id="@+id/title"
+                android:visibility="gone"/>
 
             <TextView
                 android:layout_width="wrap_content"

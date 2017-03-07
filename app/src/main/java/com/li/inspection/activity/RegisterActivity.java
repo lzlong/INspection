@@ -61,14 +61,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void register() {
-        String user = register_user.getText().toString();
+//        String user = register_user.getText().toString();
         String phone = register_phone.getText().toString();
         String pass = register_pass.getText().toString();
         String pass_t = register_pass_two.getText().toString();
-        if (Utils.isBlank(user)){
-            Utils.showToast(RegisterActivity.this, "请输入用户名");
-            return;
-        }
+//        if (Utils.isBlank(user)){
+//            Utils.showToast(RegisterActivity.this, "请输入姓名");
+//            return;
+//        }
         if (Utils.isBlank(phone) || !Utils.isMobileNO(phone)){
             Utils.showToast(RegisterActivity.this, "请输入正确的手机号");
             return;
@@ -86,7 +86,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
         Utils.showToast(RegisterActivity.this, "正在注册");
         Map<String, Object> json = new HashMap<String,Object>();
-        json.put("xm", user);
         json.put("phone", phone);
         json.put("password",pass);
         json.put("userType", "2");
@@ -124,4 +123,5 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             }
         }
     };
+
 }

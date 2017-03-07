@@ -67,10 +67,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void initView() {
         user_img = (ImageView) findViewById(R.id.user_img);
         user_name = (TextView) findViewById(R.id.user_name);
+        user_img.setOnClickListener(this);
+        user_name.setOnClickListener(this);
         if (Utils.isBlank(User.getInstance().getName())) {
             Utils.getUserData(MainActivity.this);
         }
-        user_name.setText(User.getInstance().getName());
+        if (Utils.isNotBlank(User.getInstance().getName())){
+            user_name.setText(User.getInstance().getName());
+        } else {
+            user_name.setText("暂无姓名");
+        }
         vehicle_input_imga = (ImageView) findViewById(R.id.vehicle_input_imga);
         vehicle_input_imgb = (ImageView) findViewById(R.id.vehicle_input_imgb);
         vehicle_input_imgc = (ImageView) findViewById(R.id.vehicle_input_imgc);
@@ -204,7 +210,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     };
     String dir = Environment.getExternalStorageDirectory().toString() +
             File.separator +"inspection/down/apk" + File.separator;//文件保存目录
-    String mandatoryUpgrade;
     String path = "";
     int versionCode;
     private void checkApp() {
@@ -259,6 +264,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             } else if (msg.what == -1){
                 wh.findViewById(R.id.down_l).setVisibility(View.VISIBLE);
                 Utils.showToast(MainActivity.this, msg.getData().getString("error"));
+            } else if (msg.what == 2){
+                JSONObject jsonObject = (JSONObject) msg.obj;
+                if (jsonObject != null && jsonObject.optInt("code") == 0){
+                    Utils.showToast(MainActivity.this, "设置成功");
+                    User.getInstance().setName(jsonObject.optString("name"));
+                    user_name.setText(User.getInstance().getName());
+                    namePop.dismiss();
+                }
+
             }
         }
     };
@@ -341,10 +355,77 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             showPop(vehicle_input_tvd, Constants.VEHICLE_TYPE);
         } else if (v == next_btn){
             checkData();
+        } else if (v == user_img || v == user_name){
+            setName();
         }
     }
-
+    WPopupWindow namePop;
+    private void setName() {
+        View wh= LayoutInflater.from(this).inflate(R.layout.setting,null);
+        ((TextView)wh.findViewById(R.id.name_none)).setText("姓名设置");
+        final EditText setting_edit = (EditText) wh.findViewById(R.id.setting_edit);
+        setting_edit.setHint("请输入姓名");
+        namePop=new WPopupWindow(wh);
+        namePop.showAtLocation(Utils.getContentView(MainActivity.this), Gravity.CENTER, 0, 0);
+        wh.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = setting_edit.getText().toString();
+                if (Utils.isBlank(name)){
+                    Utils.showToast(MainActivity.this, "请输入姓名");
+                    return;
+                }
+                Utils.showToast(MainActivity.this, "正在设置");
+                saveName(name);
+            }
+        });
+        wh.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                namePop.dismiss();
+            }
+        });
+        wh.findViewById(R.id.back_none).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                namePop.dismiss();
+            }
+        });
+    }
+    private void saveName(String name) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        if (Utils.isBlank(User.getInstance().getId())) {
+            Utils.getUserData(MainActivity.this);
+        }
+        params.put("id", User.getInstance().getId());
+        params.put("name", name);
+//        params.put("gender", sex);
+//        params.put("photoUrl", photoUrl);
+//        params.put("drivingLicence", license_number);
+//        params.put("archivesNo", fileno);
+//        params.put("drivingLicenceUrl", license_img);
+        final RequestDTO dto = new RequestDTO();
+        dto.setXtlb("02");
+        dto.setJkxlh("456789");
+        dto.setJkid("03");
+        dto.setJson(params);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String data = PullUtils.buildXML(dto);
+                HttpHelper httpHelper = new HttpHelper();
+                httpHelper.connect();
+                HttpResponse response = httpHelper.doPost(Constants.HTTP_PATH + Constants.WEBSERVCIE_PATH, data);
+                JSONObject jsonObject = Utils.parseResponse(response);
+                handler.sendMessage(handler.obtainMessage(2, jsonObject));
+            }
+        }).start();
+    }
     private void checkData() {
+        if (Utils.isBlank(User.getInstance().getName())){
+            Utils.showToast(MainActivity.this, "还未设置姓名，请点击左上角设置姓名。");
+            return;
+        }
         String use_property = vehicle_input_tva.getText().toString();
         String plate_type = vehicle_input_tvb.getText().toString();
         String service_type = vehicle_input_tvc.getText().toString();
@@ -371,10 +452,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             Utils.showToast(MainActivity.this, "请填写车架号");
             return;
         }
-        if (Utils.isBlank(engine)){
-            Utils.showToast(MainActivity.this, "请填写发动机号");
-            return;
-        }
+//        if (Utils.isBlank(engine)){
+//            Utils.showToast(MainActivity.this, "请填写发动机号");
+//            return;
+//        }
         InspectionData inspectionData = InspectionData.getInstance();
         inspectionData.setUse_property(use_property.substring(use_property.lastIndexOf(" ")+1, use_property.length()));
         inspectionData.setPlate_type(plate_type.substring(plate_type.lastIndexOf(" ")+1, plate_type.length()));

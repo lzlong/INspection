@@ -2,7 +2,6 @@ package com.li.inspection.application;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.location.LocationManager;
 import android.os.Environment;
 
 import com.li.inspection.constant.Constants;
@@ -43,6 +42,12 @@ public class MyApplication extends Application {
         }
         if (Utils.isNotBlank(preferences.getString("uploadUrl", ""))) {
             Constants.UPLOADSERVER = preferences.getString("uploadUrl", "");
+        }
+//        if (Utils.isNotBlank(preferences.getString("uploadProt", ""))) {
+        Constants.UPLOADSERVERPORT = preferences.getInt("uploadProt", 4009);
+//        }
+        if (Utils.isNotBlank(preferences.getString("bitmapdata", ""))) {
+            Constants.BITMAPDATA = preferences.getString("bitmapdata", "");
         }
     }
 

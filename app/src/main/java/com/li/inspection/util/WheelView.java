@@ -104,6 +104,7 @@ public class WheelView extends View {
 
     public void clearData(){
         data.clear();
+        dataSize = 0;
     }
 
     public void setCircle(boolean isCircle){

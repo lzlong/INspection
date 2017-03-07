@@ -92,7 +92,10 @@ public class JudeAdapter extends BaseArrayListAdapter {
             @Override
             public void onClick(View v) {
                 if (position == 3){
-                    showPop(jude_item_e, Constants.VEHICLE_COLOR, parameter);
+                    num = 0;
+                    sum = 0;
+                    color = "";
+                    showColorPop(jude_item_e, Constants.VEHICLE_COLOR, parameter);
                 } else if (position == 4){
                     showPop(jude_item_e, Constants.VEHICLE_PN, parameter);
                 }
@@ -108,6 +111,61 @@ public class JudeAdapter extends BaseArrayListAdapter {
             jude_item_e.setVisibility(View.GONE);
         }
         return mViewHolder;
+    }
+    int num = 0;
+    int sum = 0;
+    String color = "";
+    public void showColorPop(final TextView textView, final String[] data, final Parameter parameter){
+        final View wh= LayoutInflater.from(mContext).inflate(R.layout.common_window_wheel,null);
+        final WheelView picker= (WheelView) wh.findViewById(R.id.wheel);
+        final TextView title = (TextView) wh.findViewById(R.id.title);
+        title.setVisibility(View.VISIBLE);
+        title.setText("请选择车辆颜色种类的数量");
+        picker.addData("1");
+        picker.addData("2");
+        picker.addData("3");
+        picker.setCenterItem(data.length/3);
+        final WPopupWindow popupWindow=new WPopupWindow(wh);
+        popupWindow.showAtLocation(Utils.getContentView((Activity) mContext), Gravity.BOTTOM, 0, 0);
+        wh.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                textView.setText((String)picker.getCenterItem());
+//                parameter.setData((String)picker.getCenterItem());
+                if (sum == 0){
+                    sum = Integer.parseInt((String)picker.getCenterItem());
+                    picker.clearData();
+                    for (String name : data){
+                        picker.addData(name);
+                    }
+                    picker.setCenterItem(data.length/3);
+                    picker.notifyDataSetChanged();
+                    title.setText("请选择第一种车辆颜色");
+                } else if (sum != num){
+                    color += picker.getCenterItem()+"/";
+                    num ++;
+                    picker.clearData();
+                    for (String name : data){
+                        picker.addData(name);
+                    }
+                    picker.setCenterItem(data.length/3);
+                    picker.notifyDataSetChanged();
+                    title.setText("已选择车辆颜色: "+color.substring(0,color.length()-1));
+                }
+                if (sum == num){
+                    color = color.substring(0, color.length()-1);
+                    textView.setText(color);
+                    parameter.setData(color);
+                    popupWindow.dismiss();
+                }
+            }
+        });
+        wh.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
     }
     public void showPop(final TextView textView, String[] data, final Parameter parameter){
         View wh= LayoutInflater.from(mContext).inflate(R.layout.common_window_wheel,null);

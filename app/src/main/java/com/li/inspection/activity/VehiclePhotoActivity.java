@@ -154,6 +154,10 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
         params.put("hdzrs1", ((Parameter)inspectionData.getJudeList().get(4)).getData());
         params.put("fdjh", inspectionData.getFaDongJiHao());//车架号
         params.put("clsbdh1", inspectionData.getVIN());//VIN
+        params.put("filename", inspectionData.getLeft_path().substring(
+                inspectionData.getLeft_path().lastIndexOf("/") + 1,
+                inspectionData.getLeft_path().length()));
+        params.put("photoinfo", "1");
         boolean zt = false;
         for (int i=0; i< Constants.upData.length; i++){
             Parameter parameter = (Parameter) inspectionData.getJudeList().get(i);
@@ -168,6 +172,8 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
         }
         if (zt){
             params.put(Constants.upData[Constants.upData.length-1], "2");
+        } else {
+            params.put(Constants.upData[Constants.upData.length-1], "1");
         }
         final RequestDTO dto = new RequestDTO();
         dto.setXtlb("02");

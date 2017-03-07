@@ -22,7 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".activity.MainActivity">
+            android:name=".activity.MainActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
@@ -32,9 +33,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.SettingActivity"
-            android:theme="@style/AppTheme.Dialog"></activity>
+            android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.AutographActivity"
-            android:theme="@style/AppTheme.Dialog"></activity>
+            android:theme="@style/AppTheme.Dialog"
+            android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.JudeActivity"
