@@ -75,11 +75,11 @@ public class JudeActivity extends BaseActivity implements View.OnClickListener{
                     return;
                 }
             }
-            if (Utils.isBlank(list.get(3).getData())){
+            if (Utils.isBlank(list.get(2).getData())){
                 Utils.showToast(JudeActivity.this, "请选择车辆颜色");
                 return;
             }
-            if (Utils.isBlank(list.get(4).getData())){
+            if (Utils.isBlank(list.get(3).getData())){
                 Utils.showToast(JudeActivity.this, "请选择车辆和载人数");
                 return;
             }

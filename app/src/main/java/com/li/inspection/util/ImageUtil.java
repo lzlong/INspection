@@ -33,7 +33,7 @@ public class ImageUtil {
     public static Bitmap createWaterMaskLeftTop(
             Context context, Bitmap src, Bitmap watermark) {
         return createWaterMaskBitmap(src, watermark,
-                dp2px(context, 20), dp2px(context, 10));
+                dp2px(context, 42), 0);
     }
 
     private static Bitmap createWaterMaskBitmap(Bitmap src, Bitmap watermark,
@@ -74,7 +74,7 @@ public class ImageUtil {
         paint.getTextBounds(text, 0, text.length(), bounds);
         return drawTextToBitmap(context, bitmap, text, paint, bounds,
                 (bitmap.getWidth() - bounds.width()) / 2,
-                dp2px(context, 20) + bounds.height());
+                dp2px(context, 10) + bounds.height());
     }
 
     /**
@@ -93,8 +93,8 @@ public class ImageUtil {
         Rect bounds = new Rect();
         paint.getTextBounds(text, 0, text.length(), bounds);
         return drawTextToBitmap(context, bitmap, text, paint, bounds,
-                bitmap.getWidth() - bounds.width() - dp2px(context, 20),
-                bitmap.getHeight() - dp2px(context, 20));
+                bitmap.getWidth() - bounds.width() - dp2px(context, 45),
+                bitmap.getHeight() - dp2px(context, 10));
     }
 
     /**
@@ -133,8 +133,8 @@ public class ImageUtil {
         Rect bounds = new Rect();
         paint.getTextBounds(text, 0, text.length(), bounds);
         return drawTextToBitmap(context, bitmap, text, paint, bounds,
-                (bitmap.getWidth() - bounds.width()) / 2,
-                (bitmap.getHeight() - dp2px(context, 20)));
+                ((bitmap.getWidth() - bounds.width()) / 2-50),
+                (bitmap.getHeight() - dp2px(context, 10)));
     }
 
     //图片上绘制文字

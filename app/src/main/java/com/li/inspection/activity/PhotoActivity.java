@@ -39,15 +39,16 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener{
         long time = System.currentTimeMillis();
         if (bitmap != null){
             bitTag = 0;
-            if (tag != 2){
+//            if (tag != 2){
                 Bitmap bit = Utils.decodeSampledBitmapFromResource(getResources(),
                         R.mipmap.timg, 100, 100);
                 bitmap = ImageUtil.createWaterMaskLeftTop(PhotoActivity.this, bitmap, bit);
-                bitmap = ImageUtil.drawTextToTopCenter(PhotoActivity.this, bitmap, VIN, 25);
-                bitmap = ImageUtil.drawTextToBottomCenter(PhotoActivity.this, bitmap, Constants.BITMAPDATA, 25);
-                bitmap = ImageUtil.drawTextToRightBottom(PhotoActivity.this, bitmap, Utils.getTime(), 15);
+                bitmap = ImageUtil.drawTextToTopCenter(PhotoActivity.this, bitmap, VIN, 22);
+//                bitmap = ImageUtil.drawTextToTopCenter(PhotoActivity.this, bitmap, "0987654321", 20);
+                bitmap = ImageUtil.drawTextToBottomCenter(PhotoActivity.this, bitmap, Constants.BITMAPDATA, 20);
+                bitmap = ImageUtil.drawTextToRightBottom(PhotoActivity.this, bitmap, Utils.getTime(), 14);
 //                bitmap = ImageUtil.drawGpsToRightBottom(PhotoActivity.this, bitmap, Constants.Gps, 15);
-            }
+//            }
             photo.setImageBitmap(bitmap);
         }
         back_tv.setOnClickListener(this);
@@ -57,13 +58,13 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if (v == back_tv){
-            if (tag == 2){
-                Intent intent = new Intent(PhotoActivity.this, PhotoActivity_b.class);
-                startActivity(intent);
-            } else {
+//            if (tag == 2){
+//                Intent intent = new Intent(PhotoActivity.this, PhotoActivity_b.class);
+//                startActivity(intent);
+//            } else {
                 Intent intent = new Intent(PhotoActivity.this, PhotoActivity_a.class);
                 startActivity(intent);
-            }
+//            }
             finish();
         } else if (v == btn_tv){
             ImageUtil.save(bitmap, tag);

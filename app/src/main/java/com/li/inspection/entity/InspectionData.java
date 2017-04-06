@@ -3,8 +3,6 @@ package com.li.inspection.entity;
 import java.io.Serializable;
 import java.util.List;
 
-import static com.li.inspection.R.mipmap.user;
-
 /**
  * Created by long on 17-1-19.
  */
@@ -27,6 +25,9 @@ public class InspectionData implements Serializable {
         if(inspectionData==null)
             inspectionData=new InspectionData();
         return inspectionData;
+    }
+    public  void setNull(){
+        inspectionData=null;
     }
     public String getSign_path() {
         return sign_path;

@@ -61,7 +61,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="右前45度"
+                        android:text="右后45度"
                         android:textSize="18sp"
                         android:layout_centerVertical="true"/>
                     <TextView
@@ -87,13 +87,11 @@
                         android:layout_marginRight="5dp"
                         android:visibility="invisible"/>
                 </RelativeLayout>
-                <include layout="@layout/line"
-                    android:visibility="gone"/>
+                <include layout="@layout/line"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:visibility="gone">
+                    android:padding="10dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

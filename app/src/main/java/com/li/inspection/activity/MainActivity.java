@@ -473,7 +473,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         for (String name : data){
             picker.addData(name);
         }
-        picker.setCenterItem(data.length/3);
+        picker.setCenterItem(0);
         final WPopupWindow popupWindow=new WPopupWindow(wh);
         popupWindow.showAtLocation(Utils.getContentView(MainActivity.this), Gravity.BOTTOM, 0, 0);
         wh.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {

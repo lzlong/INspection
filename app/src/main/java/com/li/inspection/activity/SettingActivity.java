@@ -66,12 +66,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         layout_c.setOnClickListener(this);
 
         preferences = getSharedPreferences("Data", 0);
-        if (Utils.isNotBlank(preferences.getString("httpurl", ""))){
-            vehicle_input_tva.setText(preferences.getString("httpurl", ""));
-        }
-        if (Utils.isNotBlank(preferences.getString("uploadProt", ""))){
-            vehicle_input_tvb.setText(preferences.getString("uploadProt", ""));
-        }
+//        if (Utils.isNotBlank(preferences.getString("httpurl", ""))){
+//            vehicle_input_tva.setText(preferences.getString("httpurl", ""));
+//        }
+//        if (Utils.isNotBlank(preferences.getString("uploadProt", ""))){
+//            vehicle_input_tvb.setText(preferences.getString("uploadProt", ""));
+//        }
 
     }
     private String httpUrl;
@@ -176,7 +176,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 if (Utils.isNotBlank(setting_edit.getText())){
                     Constants.BITMAPDATA = setting_edit.getText().toString();
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("uploadProt", Constants.BITMAPDATA);
+                    editor.putString("bitmapdata", Constants.BITMAPDATA);
                     editor.commit();
                     vehicle_input_tvc.setText(Constants.BITMAPDATA);
                     if (popupWindow.isShowing()){
