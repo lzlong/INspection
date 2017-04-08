@@ -40,7 +40,9 @@
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.JudeActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity android:name=".activity.VehiclePhotoActivity"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.PhotoActivity_a"

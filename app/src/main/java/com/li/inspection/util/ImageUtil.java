@@ -216,11 +216,40 @@ public class ImageUtil {
                     case 2:
                         InspectionData.getInstance().setVin_path(path);
                         break;
+                    case 4:
+                        InspectionData.getInstance().setImgPath1(path);
+                        break;
+                    case 5:
+                        InspectionData.getInstance().setImgPath2(path);
+                        break;
+                    case 6:
+                        InspectionData.getInstance().setImgPath3(path);
+                        break;
+                    case 7:
+                        InspectionData.getInstance().setImgPath4(path);
+                        break;
+                    case 8:
+                        InspectionData.getInstance().setImgPath5(path);
+                        break;
+                    case 9:
+                        InspectionData.getInstance().setImgPath6(path);
+                        break;
+                    case 10:
+                        InspectionData.getInstance().setImgPath7(path);
+                        break;
+                    case 11:
+                        InspectionData.getInstance().setImgPath8(path);
+                        break;
+                    case 12:
+                        InspectionData.getInstance().setImgPath9(path);
+                        break;
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+//                bitmap.recycle();
             }
         }
 

@@ -34,7 +34,9 @@ import com.li.inspection.util.WPopupWindow;
 import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,6 +55,12 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
     private TextView name_none;
     private TextView vehicle_photo_tva, vehicle_photo_tvb, vehicle_photo_tvc, vehicle_photo_tvd;
     private ImageView vehicle_photo_imga, vehicle_photo_imgb, vehicle_photo_imgc, vehicle_photo_imgd;
+
+    private TextView vehicle_photo_tve, vehicle_photo_tvf, vehicle_photo_tvg, vehicle_photo_tvh,
+            vehicle_photo_tvi, vehicle_photo_tvj, vehicle_photo_tvk, vehicle_photo_tvl, vehicle_photo_tvm;
+    private ImageView vehicle_photo_imge, vehicle_photo_imgf, vehicle_photo_imgg, vehicle_photo_imgh,
+            vehicle_photo_imgi, vehicle_photo_imgj, vehicle_photo_imgk, vehicle_photo_imgl, vehicle_photo_imgm;
+
     private Button submit_btn;
     private void initCiew() {
         back_none = (ImageView) findViewById(R.id.back_none);
@@ -66,6 +74,26 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
         vehicle_photo_imgc = (ImageView) findViewById(R.id.vehicle_photo_imgc);
         vehicle_photo_tvd = (TextView) findViewById(R.id.vehicle_photo_tvd);
         vehicle_photo_imgd = (ImageView) findViewById(R.id.vehicle_photo_imgd);
+
+        vehicle_photo_tve = (TextView) findViewById(R.id.vehicle_photo_tve);
+        vehicle_photo_imge = (ImageView) findViewById(R.id.vehicle_photo_imge);
+        vehicle_photo_tvf = (TextView) findViewById(R.id.vehicle_photo_tvf);
+        vehicle_photo_imgf = (ImageView) findViewById(R.id.vehicle_photo_imgf);
+        vehicle_photo_tvg = (TextView) findViewById(R.id.vehicle_photo_tvg);
+        vehicle_photo_imgg = (ImageView) findViewById(R.id.vehicle_photo_imgg);
+        vehicle_photo_tvh = (TextView) findViewById(R.id.vehicle_photo_tvh);
+        vehicle_photo_imgh = (ImageView) findViewById(R.id.vehicle_photo_imgh);
+        vehicle_photo_tvi = (TextView) findViewById(R.id.vehicle_photo_tvi);
+        vehicle_photo_imgi = (ImageView) findViewById(R.id.vehicle_photo_imgi);
+        vehicle_photo_tvj = (TextView) findViewById(R.id.vehicle_photo_tvj);
+        vehicle_photo_imgj = (ImageView) findViewById(R.id.vehicle_photo_imgj);
+        vehicle_photo_tvk = (TextView) findViewById(R.id.vehicle_photo_tvk);
+        vehicle_photo_imgk = (ImageView) findViewById(R.id.vehicle_photo_imgk);
+        vehicle_photo_tvl = (TextView) findViewById(R.id.vehicle_photo_tvl);
+        vehicle_photo_imgl = (ImageView) findViewById(R.id.vehicle_photo_imgl);
+        vehicle_photo_tvm = (TextView) findViewById(R.id.vehicle_photo_tvm);
+        vehicle_photo_imgm = (ImageView) findViewById(R.id.vehicle_photo_imgm);
+
         submit_btn = (Button) findViewById(R.id.submit_btn);
         click();
         WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
@@ -85,6 +113,26 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
         vehicle_photo_imgc.setOnClickListener(this);
         vehicle_photo_tvd.setOnClickListener(this);
         vehicle_photo_imgd.setOnClickListener(this);
+
+        vehicle_photo_tve.setOnClickListener(this);
+        vehicle_photo_imge.setOnClickListener(this);
+        vehicle_photo_tvf.setOnClickListener(this);
+        vehicle_photo_imgf.setOnClickListener(this);
+        vehicle_photo_tvg.setOnClickListener(this);
+        vehicle_photo_imgg.setOnClickListener(this);
+        vehicle_photo_tvh.setOnClickListener(this);
+        vehicle_photo_imgh.setOnClickListener(this);
+        vehicle_photo_tvi.setOnClickListener(this);
+        vehicle_photo_imgi.setOnClickListener(this);
+        vehicle_photo_tvj.setOnClickListener(this);
+        vehicle_photo_imgj.setOnClickListener(this);
+        vehicle_photo_tvk.setOnClickListener(this);
+        vehicle_photo_imgk.setOnClickListener(this);
+        vehicle_photo_tvl.setOnClickListener(this);
+        vehicle_photo_imgl.setOnClickListener(this);
+        vehicle_photo_tvm.setOnClickListener(this);
+        vehicle_photo_imgm.setOnClickListener(this);
+
         submit_btn.setOnClickListener(this);
     }
 
@@ -119,6 +167,60 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
             submitData();
         } else if (v == back_none){
             finish();
+        } else if (v == vehicle_photo_tve){
+            setTag(4);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_imge){
+            setTag(4);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_tvf){
+            setTag(5);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_imgf){
+            setTag(5);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_tvg){
+            setTag(6);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_imgg){
+            setTag(6);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_tvh){
+            setTag(7);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_imgh){
+            setTag(7);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_tvi){
+            setTag(8);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_imgi){
+            setTag(8);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_tvj){
+            setTag(9);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_imgj){
+            setTag(9);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_tvk){
+            setTag(10);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_imgk){
+            setTag(10);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_tvl){
+            setTag(11);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_imgl){
+            setTag(11);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_tvm){
+            setTag(12);
+            jump(PhotoActivity_a.class);
+        } else if (v == vehicle_photo_imgm){
+            setTag(12);
+            jump(PhotoActivity_a.class);
         }
     }
     private boolean isSubmit = false;
@@ -199,6 +301,9 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
     ProgressBar submit_pro;
     TextView submit_num;
     WPopupWindow popupWindow;
+    private int imgNum = 4;
+    private int upLoadNum = 0;
+    private List filePaths  = null;
 
     Handler handler = new Handler(){
         @Override
@@ -210,6 +315,7 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                     View wh= LayoutInflater.from(VehiclePhotoActivity.this).inflate(R.layout.submitpop,null);
                     submit_pro = (ProgressBar) wh.findViewById(R.id.submit_pro);
                     submit_num = (TextView) wh.findViewById(R.id.submit_num);
+                    submit_num.setText("1/"+imgNum);
                     popupWindow=new WPopupWindow(wh, width-(width/4), height/3);
                     popupWindow.setOutTouchCancel(false);
                     wh.setFocusable(false); // 这个很重要
@@ -224,7 +330,7 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                 submit_pro.setProgress(position);
                 if (position == 100){
                     submit_pro.setProgress(0);
-                    submit_num.setText("2/4");
+                    submit_num.setText("2/"+imgNum);
                     upLoad(InspectionData.getInstance().getRight_path(), 2);
                 }
             } else if (msg.what == 2){
@@ -232,7 +338,7 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                 submit_pro.setProgress(position);
                 if (position == 100){
                     submit_pro.setProgress(0);
-                    submit_num.setText("3/4");
+                    submit_num.setText("3/"+imgNum);
                     upLoad(InspectionData.getInstance().getVin_path(), 3);
                 }
             } else if (msg.what == 3){
@@ -240,13 +346,20 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                 submit_pro.setProgress(position);
                 if (position == 100){
                     submit_pro.setProgress(0);
-                    submit_num.setText("4/4");
+                    submit_num.setText("4/"+imgNum);
                     upLoad(InspectionData.getInstance().getSign_path(), 4);
                 }
             } else if (msg.what == 4){
                 int position = (int) msg.obj;
                 submit_pro.setProgress(position);
                 if (position == 100){
+                    if (imgNum > (4+upLoadNum)){
+                        submit_pro.setProgress(0);
+                        submit_num.setText((4+upLoadNum)+"/"+imgNum);
+                        upLoad((String) filePaths.get(upLoadNum), 4);
+                        upLoadNum++;
+                        return;
+                    }
                     popupWindow.dismiss();
                     Utils.showToast(VehiclePhotoActivity.this, "上传完成");
                     InspectionData.getInstance().setNull();
@@ -266,10 +379,14 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                         + inspectionData.getRight_path().substring(inspectionData.getRight_path().lastIndexOf("/") + 1, inspectionData.getRight_path().length()) + "@"
                         + inspectionData.getVin_path().substring(inspectionData.getVin_path().lastIndexOf("/") + 1, inspectionData.getVin_path().length()) + "@"
                         + inspectionData.getSign_path().substring(inspectionData.getSign_path().lastIndexOf("/") + 1, inspectionData.getSign_path().length());
-//                String type = "1@1@1";
-//                String fileId = "1@2@3";
                 String type = "1@1@1@1";
                 String fileId = "1@2@3@4";
+                Map<String, String> fileMap = makeName(name, type, fileId);
+                if (fileMap != null){
+                    if (fileMap.containsKey("name") && Utils.isNotBlank(fileMap.get("name"))) name = fileMap.get("name");
+                    if (fileMap.containsKey("type") && Utils.isNotBlank(fileMap.get("type"))) type = fileMap.get("type");
+                    if (fileMap.containsKey("fileId") && Utils.isNotBlank(fileMap.get("fileId"))) fileId = fileMap.get("fileId");
+                }
 
                 Map<String, Object> params = new HashMap<String, Object>();
                 if (Utils.isBlank(User.getInstance().getId())) {
@@ -301,6 +418,80 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
             }
         }
     };
+
+    private Map makeName(String name, String type, String fileId){
+        filePaths = new ArrayList();
+        InspectionData inspectionData = InspectionData.getInstance();
+        if (Utils.isNotBlank(inspectionData.getImgPath1())){
+            name = name + "@" + inspectionData.getImgPath1().substring(inspectionData.getImgPath1().lastIndexOf("/") + 1, inspectionData.getImgPath1().length());
+            type = type+"@1";
+            fileId = fileId+"@5";
+            imgNum++;
+            filePaths.add(inspectionData.getImgPath1());
+        }
+        if (Utils.isNotBlank(inspectionData.getImgPath2())){
+            name = name + "@" + inspectionData.getImgPath2().substring(inspectionData.getImgPath2().lastIndexOf("/") + 1, inspectionData.getImgPath2().length());
+            type = type+"@1";
+            fileId = fileId+"@6";
+            imgNum++;
+            filePaths.add(inspectionData.getImgPath2());
+        }
+        if (Utils.isNotBlank(inspectionData.getImgPath3())){
+            name = name + "@" + inspectionData.getImgPath3().substring(inspectionData.getImgPath3().lastIndexOf("/") + 1, inspectionData.getImgPath3().length());
+            type = type+"@1";
+            fileId = fileId+"@7";
+            imgNum++;
+            filePaths.add(inspectionData.getImgPath3());
+        }
+        if (Utils.isNotBlank(inspectionData.getImgPath4())){
+            name = name + "@" + inspectionData.getImgPath4().substring(inspectionData.getImgPath4().lastIndexOf("/") + 1, inspectionData.getImgPath4().length());
+            type = type+"@1";
+            fileId = fileId+"@8";
+            imgNum++;
+            filePaths.add(inspectionData.getImgPath4());
+        }
+        if (Utils.isNotBlank(inspectionData.getImgPath5())){
+            name = name + "@" + inspectionData.getImgPath5().substring(inspectionData.getImgPath5().lastIndexOf("/") + 1, inspectionData.getImgPath5().length());
+            type = type+"@1";
+            fileId = fileId+"@9";
+            imgNum++;
+            filePaths.add(inspectionData.getImgPath5());
+        }
+        if (Utils.isNotBlank(inspectionData.getImgPath6())){
+            name = name + "@" + inspectionData.getImgPath6().substring(inspectionData.getImgPath6().lastIndexOf("/") + 1, inspectionData.getImgPath6().length());
+            type = type+"@1";
+            fileId = fileId+"@10";
+            imgNum++;
+            filePaths.add(inspectionData.getImgPath6());
+        }
+        if (Utils.isNotBlank(inspectionData.getImgPath7())){
+            name = name + "@" + inspectionData.getImgPath7().substring(inspectionData.getImgPath7().lastIndexOf("/") + 1, inspectionData.getImgPath7().length());
+            type = type+"@1";
+            fileId = fileId+"@11";
+            imgNum++;
+            filePaths.add(inspectionData.getImgPath7());
+        }
+        if (Utils.isNotBlank(inspectionData.getImgPath8())){
+            name = name + "@" + inspectionData.getImgPath8().substring(inspectionData.getImgPath8().lastIndexOf("/") + 1, inspectionData.getImgPath8().length());
+            type = type+"@1";
+            fileId = fileId+"@12";
+            imgNum++;
+            filePaths.add(inspectionData.getImgPath8());
+        }
+        if (Utils.isNotBlank(inspectionData.getImgPath9())){
+            name = name + "@" + inspectionData.getImgPath9().substring(inspectionData.getImgPath9().lastIndexOf("/") + 1, inspectionData.getImgPath9().length());
+            type = type+"@1";
+            fileId = fileId+"@13";
+            imgNum++;
+            filePaths.add(inspectionData.getImgPath9());
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("name", name);
+        map.put("type", type);
+        map.put("fileId", fileId);
+        return map;
+    }
+
     String id = "";
     private void upLoad(final String path, final int what){
         new Thread(new Runnable() {
@@ -352,6 +543,51 @@ public class VehiclePhotoActivity extends BaseActivity implements View.OnClickLi
                 vehicle_photo_imgd.setImageBitmap(bitmap);
                 vehicle_photo_imgd.setVisibility(View.VISIBLE);
                 vehicle_photo_tvd.setVisibility(View.INVISIBLE);
+                break;
+            case 4:
+                vehicle_photo_imge.setImageBitmap(bitmap);
+                vehicle_photo_imge.setVisibility(View.VISIBLE);
+                vehicle_photo_tve.setVisibility(View.INVISIBLE);
+                break;
+            case 5:
+                vehicle_photo_imgf.setImageBitmap(bitmap);
+                vehicle_photo_imgf.setVisibility(View.VISIBLE);
+                vehicle_photo_tvf.setVisibility(View.INVISIBLE);
+                break;
+            case 6:
+                vehicle_photo_imgg.setImageBitmap(bitmap);
+                vehicle_photo_imgg.setVisibility(View.VISIBLE);
+                vehicle_photo_tvg.setVisibility(View.INVISIBLE);
+                break;
+            case 7:
+                vehicle_photo_imgh.setImageBitmap(bitmap);
+                vehicle_photo_imgh.setVisibility(View.VISIBLE);
+                vehicle_photo_tvh.setVisibility(View.INVISIBLE);
+                break;
+            case 8:
+                vehicle_photo_imgi.setImageBitmap(bitmap);
+                vehicle_photo_imgi.setVisibility(View.VISIBLE);
+                vehicle_photo_tvi.setVisibility(View.INVISIBLE);
+                break;
+            case 9:
+                vehicle_photo_imgj.setImageBitmap(bitmap);
+                vehicle_photo_imgj.setVisibility(View.VISIBLE);
+                vehicle_photo_tvj.setVisibility(View.INVISIBLE);
+                break;
+            case 10:
+                vehicle_photo_imgk.setImageBitmap(bitmap);
+                vehicle_photo_imgk.setVisibility(View.VISIBLE);
+                vehicle_photo_tvk.setVisibility(View.INVISIBLE);
+                break;
+            case 11:
+                vehicle_photo_imgl.setImageBitmap(bitmap);
+                vehicle_photo_imgl.setVisibility(View.VISIBLE);
+                vehicle_photo_tvl.setVisibility(View.INVISIBLE);
+                break;
+            case 12:
+                vehicle_photo_imgm.setImageBitmap(bitmap);
+                vehicle_photo_imgm.setVisibility(View.VISIBLE);
+                vehicle_photo_tvm.setVisibility(View.INVISIBLE);
                 break;
         }
     }

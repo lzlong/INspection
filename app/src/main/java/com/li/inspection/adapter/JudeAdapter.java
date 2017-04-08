@@ -91,20 +91,20 @@ public class JudeAdapter extends BaseArrayListAdapter {
         jude_item_e.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (position == 2){
+                if (position == 3){
                     num = 0;
                     sum = 0;
                     color = "";
                     showColorPop(jude_item_e, Constants.VEHICLE_COLOR, parameter);
-                } else if (position == 3){
+                } else if (position == 4){
                     showPop(jude_item_e, Constants.VEHICLE_PN, parameter);
                 }
             }
         });
-        if (position == 2){
+        if (position == 3){
             jude_item_e.setVisibility(View.VISIBLE);
             jude_item_e.setHint("请选择车辆颜色");
-        } else if (position == 3){
+        } else if (position == 4){
             jude_item_e.setVisibility(View.VISIBLE);
             jude_item_e.setHint("请选择车辆和载人数");
         }else {

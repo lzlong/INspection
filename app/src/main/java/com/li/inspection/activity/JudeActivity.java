@@ -69,17 +69,17 @@ public class JudeActivity extends BaseActivity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if (v == next_btn){
-            for (int i = 1; i < Constants.judea.length; i++){
-                if (list.get(i).getIdqualified() == -1){
+            for (int i = 0; i < Constants.judea.length; i++){
+                if (list.get(i).getIdqualified() == -1 && i != 1){
                     Utils.showToast(JudeActivity.this, "还未对"+list.get(i).getParameter().substring(0, list.get(i).getParameter().length()-1)+"进行判定");
                     return;
                 }
             }
-            if (Utils.isBlank(list.get(2).getData())){
+            if (Utils.isBlank(list.get(3).getData())){
                 Utils.showToast(JudeActivity.this, "请选择车辆颜色");
                 return;
             }
-            if (Utils.isBlank(list.get(3).getData())){
+            if (Utils.isBlank(list.get(4).getData())){
                 Utils.showToast(JudeActivity.this, "请选择车辆和载人数");
                 return;
             }
