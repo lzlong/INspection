@@ -346,13 +346,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == vehicle_input_imga){
-            showPop(vehicle_input_tva, Constants.USE_PROPERTY);
+            showPop(vehicle_input_tva, Constants.USE_PROPERTY, 0);
         } else if (v == vehicle_input_imgb){
-            showPop(vehicle_input_tvb, Constants.PLATE_TYPE);
+            showPop(vehicle_input_tvb, Constants.PLATE_TYPE, 0);
         } else if (v == vehicle_input_imgc){
-            showPop(vehicle_input_tvc, Constants.SERVICE_TYPE);
+            showPop(vehicle_input_tvc, Constants.SERVICE_TYPE, 0);
         } else if (v == vehicle_input_imgd){
-            showPop(vehicle_input_tvd, Constants.VEHICLE_TYPE);
+            showPop(vehicle_input_tvd, Constants.VEHICLE_TYPE, 116);
         } else if (v == next_btn){
             checkData();
         } else if (v == user_img || v == user_name){
@@ -467,13 +467,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         startActivity(intent);
     }
 
-    public void showPop(final TextView textView, String[] data){
+    public void showPop(final TextView textView, String[] data, int num){
         View wh= LayoutInflater.from(this).inflate(R.layout.common_window_wheel,null);
         final WheelView picker= (WheelView) wh.findViewById(R.id.wheel);
         for (String name : data){
             picker.addData(name);
         }
-        picker.setCenterItem(0);
+        picker.setCenterItem(num);
         final WPopupWindow popupWindow=new WPopupWindow(wh);
         popupWindow.showAtLocation(Utils.getContentView(MainActivity.this), Gravity.BOTTOM, 0, 0);
         wh.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
