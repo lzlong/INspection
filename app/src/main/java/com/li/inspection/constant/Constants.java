@@ -50,7 +50,7 @@ public class Constants {
             "K143 小型专项作业车", "K144 微型专项作业车", "K145 重型专项作业车", "K146 轻型专项作业车"
     };
     public static String VEHICLE_COLOR[] = {"白", "灰", "粉", "黑","红", "黄", "绿", "紫", "蓝", "棕"};
-    public static String VEHICLE_PN[] = {"1人", "2人","3人", "4人", "5人", "6人", "7人", "8人", "9人", "10人", "11人", "12人", "13人"};
+    public static String VEHICLE_PN[] = {"0人", "1人", "2人","3人", "4人", "5人", "6人", "7人", "8人", "9人", "10人", "11人", "12人", "13人"};
 //    public static String HTTP_PATH = "http://192.168.2.150:8090";
 //    public static String HTTP_PATH = "http://192.168.2.226:8099";
     public static String HTTP_PATH = "http://sdkj.kmdns.net:4008";

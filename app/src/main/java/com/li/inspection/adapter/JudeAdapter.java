@@ -173,7 +173,7 @@ public class JudeAdapter extends BaseArrayListAdapter {
         for (String name : data){
             picker.addData(name);
         }
-        picker.setCenterItem(data.length/3);
+        picker.setCenterItem(data.length/3+1);
         final WPopupWindow popupWindow=new WPopupWindow(wh);
         popupWindow.showAtLocation(Utils.getContentView((Activity) mContext), Gravity.BOTTOM, 0, 0);
         wh.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
